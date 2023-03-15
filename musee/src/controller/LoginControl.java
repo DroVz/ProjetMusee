@@ -3,10 +3,14 @@ package controller;
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 
 public class LoginControl {
 	
 	private Main mainControler;
+	
+	@FXML
+	private TextField txtLogin;
 	
 	public LoginControl() {
 		super();
@@ -31,6 +35,15 @@ public class LoginControl {
 		 * Vérifier le rôle associé pour savoir quel contrôleur appeler ensuite
 		 * Par défaut, on va utiliser le rôle architecte
 		*/
-		mainControler.showArchitectPane();
+		System.out.println(txtLogin.getText());
+		if (txtLogin.getText().equals("a")) {
+			mainControler.showArchitectPane();
+		}
+		else if (txtLogin.getText().equals("c")) {
+			mainControler.showCuratorPane();
+		}
+		else {
+			mainControler.showArchitectPane();
+		}			
 	}
 }
