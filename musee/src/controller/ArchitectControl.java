@@ -173,7 +173,7 @@ public class ArchitectControl {
 		try {
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifRoom.fxml"));
+			loader.setLocation(Main.class.getResource("../view/SavedNotif.fxml"));
 			// passage de ce contrôleur à la vue
 			loader.setController(this);
 			dialogRoomCreated = (Pane)loader.load();
@@ -283,7 +283,7 @@ public class ArchitectControl {
 	 * @param e
 	 */
 	@FXML
-	private void confirmRoomCreated(ActionEvent e) {
+	private void confirmSaved(ActionEvent e) {
 		notifWindow.close();
 	}
 	

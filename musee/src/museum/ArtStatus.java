@@ -19,6 +19,6 @@ public class ArtStatus {
 	
 	@Override
 	public String toString() {
-		return "ArtStatus [id=" + id_art_status + ", libellé=" + name + "]";
+		return getName();
 	}
 }
