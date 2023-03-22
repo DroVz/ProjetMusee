@@ -9,7 +9,6 @@ public class Art {
 	private int dim_x;
 	private int dim_y;
 	private int dim_z;
-	// TODO vérifier comment stocker les données d'une image
 	private byte[] image;
 	private Author author;
 	private ArtStatus art_status;

@@ -43,7 +43,7 @@ public class LoginControl {
 			mainControler.showCuratorPane();
 		}
 		else {
-			mainControler.showArchitectPane();
+			mainControler.showCuratorPane();
 		}			
 	}
 }
