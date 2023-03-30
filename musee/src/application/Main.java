@@ -1,5 +1,19 @@
 package application;
 	
+import java.io.IOException;
+import java.util.List;
+
+import controller.ArchitectControl;
+import controller.CuratorControl;
+import controller.LoginControl;
+import dao.ArtDAO;
+import dao.ArtStatusDAO;
+import dao.ArtTypeDAO;
+import dao.AuthorDAO;
+import dao.DoorDAO;
+import dao.RoleDAO;
+import dao.RoomDAO;
+import dao.UserDAO;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,10 +26,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.List;
-
 import museum.Art;
 import museum.ArtStatus;
 import museum.ArtType;
@@ -24,17 +34,7 @@ import museum.Door;
 import museum.Role;
 import museum.Room;
 import museum.User;
-import controller.ArchitectControl;
-import controller.CuratorControl;
-import controller.LoginControl;
-import dao.ArtDAO;
-import dao.ArtStatusDAO;
-import dao.ArtTypeDAO;
-import dao.AuthorDAO;
-import dao.DoorDAO;
-import dao.RoleDAO;
-import dao.RoomDAO;
-import dao.UserDAO;
+import museum.Zone;
 
 public class Main extends Application {
 	
@@ -166,6 +166,12 @@ public class Main extends Application {
 	public void addRoom(String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().create(room)) {
+			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
+		}		
+	}
+	public void addZone(String name, int dim_x, int dim_y, int pos_x, int pos_y) {
+		Zone zone = new Zone(name, dim_x, dim_y, pos_x, pos_y);
+		if (RoomDAO.getInstance().create(zone)) {
 			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
 		}		
 	}

@@ -3,10 +3,13 @@ package controller;
 import java.io.IOException;
 
 import application.Main;
+import dao.SpotDAO;
+import dao.ZoneDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +22,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.Room;
+import museum.Spot;
+import museum.Zone;
 
 public class ArchitectControl {
 	
@@ -35,6 +40,7 @@ public class ArchitectControl {
 	private Pane dialogRoomCreated;
 	private boolean updatingRoom = false;
 	private boolean addingRoom = false;
+	private boolean addingZone = false;
 	
 	@FXML
 	private TableView<Room> roomTable;
@@ -57,6 +63,8 @@ public class ArchitectControl {
 	@FXML
 	private TextField inputRoomName;
 	@FXML
+	private TextField inputZoneName;
+	@FXML
 	private TextField inputRoomFloor;
 	@FXML
 	private TextField inputRoomDimX;
@@ -65,12 +73,23 @@ public class ArchitectControl {
 	@FXML
 	private TextField inputRoomDimZ;
 	@FXML
+	private TextField inputZoneDimX;
+	@FXML
+	private TextField inputZoneDimY;
+	@FXML
 	private TextField inputRoomPosX;
 	@FXML
 	private TextField inputRoomPosY;
 	@FXML
+	private TextField inputZonePosX;
+	@FXML
+	private TextField inputZonePosY;
+	@FXML
 	private Label lblNotification;
-	
+	@FXML
+	private AnchorPane editZone;
+	@FXML
+	private Button createZone;
 	
 	/*  ---------------------------
 	 * 
@@ -84,7 +103,6 @@ public class ArchitectControl {
 	public ArchitectControl() {
 		super();
 	}
-	
 	/**
 	 * définit le contrôleur principal
 	 * @param mainControler
@@ -106,6 +124,17 @@ public class ArchitectControl {
 		int roomPosX = Integer.parseInt(inputRoomPosX.getText());
 		int roomPosY = Integer.parseInt(inputRoomPosY.getText());
 		mainControler.addRoom(roomName, roomFloor, roomDimX, roomDimY, roomDimZ, roomPosX, roomPosY);
+	}
+	/**
+	 * demande au contrôleur principal d'ajouter une salle
+	 */
+	public void addZone() {
+		String zoneName = inputRoomName.getText();
+		int zoneDimX = Integer.parseInt(inputZoneDimX.getText());
+		int zoneDimY = Integer.parseInt(inputZoneDimY.getText());
+		int zonePosX = Integer.parseInt(inputZonePosX.getText());
+		int zonePosY = Integer.parseInt(inputZonePosY.getText());
+		mainControler.addZone(zoneName, zoneDimX, zoneDimY, zonePosX, zonePosY);
 	}
 	
 	/**
@@ -293,5 +322,36 @@ public class ArchitectControl {
 	@FXML
 	private void handleRoomTableAction(MouseEvent event) {
 		selectedRoomLine = roomTable.getSelectionModel().getSelectedIndex();
+	}
+	/**
+	 * event listener du bouton "Créer" une salle
+	 * @param e
+	 */
+	@FXML
+	private void handleZoneAddition(ActionEvent e) {
+		addingZone = true;
+		roomFormTitle.setText("Création de salle");
+		showRoomCreateEdit();
+	}
+	
+	/**
+	 * affiche la zone de création/modification de salle
+	 */
+	private void showZoneCreateEdit() {
+		editZone.setDisable(false);
+		createZone.setDisable(true);
+	}
+	/**
+	 * event listener du bouton "Enregistrer" une Zone
+	 * @param e
+	 */
+	@FXML
+	private void handleSaveZone(ActionEvent e) {
+		if (addingZone) {
+			addZone();
+		}
+		else if (updatingRoom) {
+			updateRoom();
+		}		
 	}
 }
