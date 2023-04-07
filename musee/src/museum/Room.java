@@ -1,4 +1,4 @@
-package museum;
+ package museum;
 
 public class Room {
 	private int id_room;

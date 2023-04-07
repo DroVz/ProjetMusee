@@ -1,8 +1,10 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import application.Main;
+import dao.RoomDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -191,7 +193,96 @@ public class ArchitectControl {
 		roomTable.setItems(mainControler.getRoomData());
 		roomTable.getSelectionModel().selectFirst();
 	}
+	
+	/**
+	 * Vérifie si la place occupée par la salle créer n'est pas déjà prise
+	 */
+	
+	private boolean checkName() {
+
+    RoomDAO roomDao =  RoomDAO.getInstance();
+
+    List<Room> ListRoom = roomDao.readAll();
+
+    boolean reponse = true;
+
+    for(Room room : ListRoom) {
+        if (inputRoomName.getText().equals(room.getName())) {
+            reponse = false;
+        }
+	}
+    return reponse;
+	}
+	
+	
+	private boolean checkPositionX() {
 		
+		RoomDAO roomDao =  RoomDAO.getInstance();
+
+	    List<Room> ListRoom = roomDao.readAll();
+	    
+	    boolean reponse = true ;
+	    	    
+	    for(Room room : ListRoom) {
+	    	    	if ( Integer.parseInt(inputRoomFloor.getText()) == room.getFloor()) {  	    		
+	    	    		if (Integer.parseInt(inputRoomPosX.getText()) >= room.getPos_x() + room.getDim_x()) {
+	    	    				reponse = true ;
+	    	    		} else if (Integer.parseInt(inputRoomPosX.getText()) + Integer.parseInt(inputRoomDimX.getText()) <= room.getPos_x()) {
+	    	    				reponse = true ;
+	    	    		} else {reponse = false;
+	    	    		}
+	    	    }
+	    }
+	   return reponse;
+}
+	    	    
+	
+	private boolean checkPositionY() {
+		
+		RoomDAO roomDao =  RoomDAO.getInstance();
+
+	    List<Room> ListRoom = roomDao.readAll();
+	    
+	    boolean reponse = true ;
+	    	    
+	    for(Room room : ListRoom) {
+	    	    	if ( Integer.parseInt(inputRoomFloor.getText()) == room.getFloor()) {  	    		
+	    	    		if (Integer.parseInt(inputRoomPosY.getText()) >= room.getPos_y() + room.getDim_y()) {
+	    	    				reponse = true ;
+	    	    		} else if (Integer.parseInt(inputRoomPosY.getText()) + Integer.parseInt(inputRoomDimY.getText()) <= room.getPos_y()) {
+	    	    				reponse = true ;
+	    	    		} else {reponse = false;
+	    	    		}
+	    	    }
+	    }
+	   return reponse;
+}
+	
+	
+	private boolean checkConditions() {
+	boolean	reponse = false ;
+	
+	if (addingRoom == true) {
+		if (checkName()== true  ) {
+			if(checkPositionX() == true) {
+				if(checkPositionY()== true) {
+					reponse = true ;
+				}
+			}
+		}
+	}else if(updatingRoom == true ) {
+		if(checkPositionX() == true) {
+			if(checkPositionY()== true) {
+				reponse = true ;
+			}
+		}
+	}
+		
+		return reponse ;
+	}
+	
+	
+	
 	
 	/*  ---------------------------
 	 * 
@@ -270,12 +361,17 @@ public class ArchitectControl {
 	 */
 	@FXML
 	private void handleSaveRoom(ActionEvent e) {
-		if (addingRoom) {
+		 if(checkConditions()== true) {
+			 if (addingRoom) {
 			addRoom();
+			 } else if (updatingRoom) {
+			 	updateRoom();
+			 }
+		}else {
+			System.out.println("erreur");
 		}
-		else if (updatingRoom) {
-			updateRoom();
-		}		
+			 
+		
 	}
 	
 	/**
