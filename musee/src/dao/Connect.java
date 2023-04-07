@@ -24,7 +24,7 @@ public class Connect {
 				SQLServerDataSource ds = new SQLServerDataSource();
 				ds.setUser(ID);
 				ds.setPassword(MDP);
-				ds.setServerName("localhost\\SQLEXPRESS");
+				ds.setServerName("localhost");
 				ds.setDatabaseName("museum");
 				connection = ds.getConnection();
 				System.out.println("connecté");
