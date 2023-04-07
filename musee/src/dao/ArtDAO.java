@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import museum.Art;
@@ -29,6 +30,9 @@ public class ArtDAO extends DAO<Art> {
 	private static final String IMAGE = "image";
 	
 	private static ArtDAO instance=null;
+	
+	// hashmap dégradé pour stocker les œuvres sans l'image
+	private final HashMap<Integer, Art> dataLight = new HashMap<Integer, Art>();
 	
 	public static ArtDAO getInstance(){
 		if (instance==null){
@@ -108,6 +112,7 @@ public class ArtDAO extends DAO<Art> {
 		return success;
 	}
 
+	// TODO à utiliser avec la hashmap complète, quand on veut les détails complets d'une oeuvre (clic dessus)
 	@Override
 	public Art read(int id) {
 		Art art = null;
@@ -140,9 +145,56 @@ public class ArtDAO extends DAO<Art> {
 				e.printStackTrace();
 			}
 		}
+		// TODO à supprimer
+		// lignes test nombre de read d'une classe
+		nbRead += 1;
+		System.out.println(nbRead + " (readFull)");
+		//
 		return art;
 	}
 	
+	// TODO à utiliser avec la hashmap light, quand on veut les infos d'une oeuvre sans charger la photo
+	public Art readLight(int id) {
+		Art artLight = null;
+		if (dataLight.containsKey(id)) {
+			artLight=dataLight.get(id);
+		}
+		else {
+			try {
+				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id;
+				ResultSet rs = Connect.executeQuery(requete);
+				rs.next();
+				int ref_art_type = rs.getInt(TYPE);
+				int ref_author = rs.getInt(AUTHOR);
+				int ref_art_status = rs.getInt(STATUS);
+				String code = rs.getString(CODE);
+				String title = rs.getString(TITLE);
+				String date = rs.getString(DATE);
+				String materials = rs.getString(MATERIALS);
+				int dim_x = rs.getInt(DIMX);
+				int dim_y = rs.getInt(DIMY);
+				int dim_z = rs.getInt(DIMZ);
+				ArtType art_type = ArtTypeDAO.getInstance().read(ref_art_type);
+				Author author = AuthorDAO.getInstance().read(ref_author);
+				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
+				artLight = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
+						null, author, art_status, art_type);
+				dataLight.put(id, artLight);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// TODO à supprimer
+		// lignes test nombre de read d'une classe
+		nbRead += 1;
+		System.out.println(nbRead + " (readLight)");
+		return artLight;
+	}
+	
+	/**
+	 * récupère la liste d'œuvres en BD (version light - sans photo)
+	 * @return
+	 */
 	public List<Art> readAll() {
 		List<Art> art_objects = new ArrayList<Art>();
 		Art art = null;
@@ -151,7 +203,7 @@ public class ArtDAO extends DAO<Art> {
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art = rs.getInt(1);
-				art = ArtDAO.getInstance().read(id_art);
+				art = ArtDAO.getInstance().readLight(id_art);
 				art_objects.add(art);
 			}
 		} catch (SQLException e) {

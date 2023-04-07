@@ -211,6 +211,11 @@ public class Main extends Application {
 		}		
 	}
 	
+	public Art getFullArtData(int id_art) {
+		Art fullArt = ArtDAO.getInstance().read(id_art);
+		return fullArt;
+	}
+	
 	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
 			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
 		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
@@ -315,8 +320,6 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
-	// TODO Tests Claire ci-dessous
 	
 	/**
 	 * affiche la sous-fenêtre du rôle "conservateur"
