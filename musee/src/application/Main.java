@@ -6,6 +6,7 @@ import java.util.List;
 import controller.ArchitectControl;
 import controller.CuratorControl;
 import controller.LoginControl;
+import controller.ZoneManagementControl;
 import dao.ArtDAO;
 import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
@@ -34,7 +35,6 @@ import museum.Door;
 import museum.Role;
 import museum.Room;
 import museum.User;
-import museum.Zone;
 
 public class Main extends Application {
 	
@@ -47,11 +47,13 @@ public class Main extends Application {
 	private AnchorPane loginPane = null;
 	private AnchorPane architectPane = null;
 	private AnchorPane curatorPane = null;
+	private AnchorPane showRoomPane = null;
 	
 	// sous-contrôleurs des différentes sous-fenêtres
 	private LoginControl loginCtrl = null;
 	private ArchitectControl architectCtrl = null;
 	private CuratorControl curatorCtrl = null;
+	private ZoneManagementControl showRoomCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -168,14 +170,7 @@ public class Main extends Application {
 		if (RoomDAO.getInstance().create(room)) {
 			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
 		}		
-	}
-	public void addZone(String name, int dim_x, int dim_y, int pos_x, int pos_y) {
-		Zone zone = new Zone(name, dim_x, dim_y, pos_x, pos_y);
-		if (RoomDAO.getInstance().create(zone)) {
-			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
-		}		
-	}
-	
+	}	
 	public void updateRoom(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(id_room, name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().update(room)) {
@@ -299,6 +294,25 @@ public class Main extends Application {
 			}
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(curatorPane);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showShowRoomPane() {
+		try {
+			if (showRoomPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/ShowRoom.fxml"));
+				showRoomPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.showRoomCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.showRoomCtrl.setMainControl(this);
+			}
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(showRoomPane);
 
 		} catch (IOException e) {
 			e.printStackTrace();

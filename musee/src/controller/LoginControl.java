@@ -42,6 +42,9 @@ public class LoginControl {
 		else if (txtLogin.getText().equals("c")) {
 			mainControler.showCuratorPane();
 		}
+		else if (txtLogin.getText().equals("s")) {
+			mainControler.showShowRoomPane();
+		}
 		else {
 			mainControler.showArchitectPane();
 		}			
