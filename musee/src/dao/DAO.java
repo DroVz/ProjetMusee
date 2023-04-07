@@ -8,6 +8,10 @@ import java.util.HashMap;
  */
 public abstract class DAO<T> {
 	
+	// TODO à supprimer
+	// permet de tester le nombre d'appels read par une classe DAO pour vérifier qu'il n'y en a pas d'inutiles
+	protected static int nbRead = 0;
+	
 	protected final HashMap<Integer, T> data = new HashMap<Integer, T>();
 		
 	/**

@@ -11,6 +11,8 @@ public class LoginControl {
 	
 	@FXML
 	private TextField txtLogin;
+	@FXML
+	private TextField txtPassword;
 	
 	public LoginControl() {
 		super();
