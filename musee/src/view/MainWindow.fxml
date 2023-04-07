@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="200.0" prefWidth="543.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <Label prefHeight="56.0" prefWidth="106.0" text="Gestion de musée" BorderPane.alignment="CENTER" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <Label alignment="CENTER" prefHeight="56.0" prefWidth="466.0" text="Gestion de musée" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+         </center>
+         <right>
+            <Button fx:id="btnQuit" mnemonicParsing="false" onAction="#handleQuitBtn" prefHeight="26.0" prefWidth="58.0" text="Quitter" BorderPane.alignment="CENTER" />
+         </right>
+      </BorderPane>
    </top>
 </BorderPane>

@@ -1,6 +1,14 @@
 package controller;
 
+import java.awt.Desktop;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,16 +22,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.Art;
+import museum.ArtStatus;
 import museum.ArtType;
 import museum.Author;
-import museum.Room;
 
 public class CuratorControl {
 	
@@ -40,6 +50,14 @@ public class CuratorControl {
 	private Pane dialogArtSaved;
 	private boolean updatingArt = false;
 	private boolean addingArt = false;
+	private Stage stgAuthorAddition = new Stage();
+	private AuthorSelectControl authorSelectCtrl = null;
+	private Stage stgImageSelect = new Stage();
+	// récupération des infos du système utilisé
+	// TODO ligne suivante sert à quoi ?
+	private Desktop desktop = Desktop.getDesktop();
+	final FileChooser fileChooser = new FileChooser();
+	private File file = null;
 	
 	@FXML
 	private Button createAction;
@@ -54,9 +72,15 @@ public class CuratorControl {
 	@FXML
 	private Button saveArt;
 	@FXML
-	private ComboBox<Author> cbbAuthor;
+	private Button btnAuthorAddition;
+	@FXML
+	private Button btnAuthorSelect;
+	@FXML
+	private Button btnImageSelect;
 	@FXML
 	private ComboBox<ArtType> cbbArtType;
+	@FXML
+	private ComboBox<Author> cbbAuthor;
 	@FXML
 	private ImageView imgArt;
 	@FXML
@@ -84,6 +108,10 @@ public class CuratorControl {
 	@FXML
 	private Label lblNotification;
 	@FXML
+	private Label lblImgPath;
+	@FXML
+	private Pane pneAuthorSelect;
+	@FXML
 	private AnchorPane pneArtInfo;
 	@FXML
 	private AnchorPane pneArtCreatEdit;
@@ -95,6 +123,8 @@ public class CuratorControl {
 	private TableColumn<Art, String> nameColumn;
 	@FXML
 	private TableColumn<Art, String> authorColumn;
+	@FXML
+	private TableColumn<Art, String> statusColumn;
 	@FXML
 	private TextField txtArtTitle;
 	@FXML
@@ -109,9 +139,24 @@ public class CuratorControl {
 	private TextField txtDimY;
 	@FXML
 	private TextField txtDimZ;
+	@FXML
+	private TextField txtArtAuthor;
+	@FXML
+	private TextField txtAuthorName;
+	@FXML
+	private TextField txtAuthorFirstName;
+	@FXML
+	private TextField txtAuthorAddName;
+	@FXML
+	private TextField txtAuthorDates;
 	
 	
-
+	/*  ---------------------------
+	 * 
+	 *          MÉTHODES
+	 * 
+	 *  --------------------------- */
+	
 	/**
 	 * constructeur de la classe
 	 */
@@ -130,10 +175,10 @@ public class CuratorControl {
 	
 	public void refreshData() {
 		artTable.setItems(mainController.getArtData());
-		cbbAuthor.setItems(mainController.getAuthorData());
 		cbbArtType.setItems(mainController.getArtTypeData());
+		cbbAuthor.setItems(mainController.getAuthorData());
 	}
-	
+		
 	/**
 	 * réinitialise la zone de création/modification d'œuvre
 	 */
@@ -145,10 +190,39 @@ public class CuratorControl {
 		txtDimX.setText("");
 		txtDimY.setText("");
 		txtDimZ.setText("");
+		lblImgPath.setText("");
+	}
+	
+	/**
+	 * convertit un tableau d'octets en image
+	 * @param imgData
+	 * @return
+	 * @throws IOException
+	 */
+	private Image byteArrayToImage(byte[] imgData) throws IOException {
+		ByteArrayInputStream bais = new ByteArrayInputStream(imgData);
+		Image artImage = new Image(bais);
+		return artImage;	         	
+	}
+	
+	/**
+	 * convertit une image en tableau d'octets
+	 * @param imgFile
+	 * @return
+	 * @throws IOException 
+	 */
+	private byte[] imageToByteArray(File imgFile) throws IOException {
+		BufferedImage bImage = ImageIO.read(imgFile);
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    ImageIO.write(bImage, "jpg", baos);
+	    byte[] imgData = baos.toByteArray();
+	    baos.flush();
+	    return imgData;    
 	}
 	
 	/**
 	 * affiche la zone des informations de l'œuvre
+	 * @throws FileNotFoundException 
 	 */
 	private void showArtInfo() {
 		if (selectedArtLine != -1) {
@@ -160,51 +234,38 @@ public class CuratorControl {
 			lblArtX.setText(selectedArt.getDim_x()+"");
 			lblArtY.setText(selectedArt.getDim_y()+"");
 			lblArtZ.setText(selectedArt.getDim_z()+"");
-			lblAuthor.setText(selectedArt.getAuthor().getLast_name() + " " + selectedArt.getAuthor().getFirst_name());
+			String fullName = selectedArt.getAuthor().getLast_name() + " " + selectedArt.getAuthor().getFirst_name();
+			if (!selectedArt.getAuthor().getAdditional_name().equals("")) {
+				fullName += ", dit " + selectedArt.getAuthor().getAdditional_name();
+			}
+			lblAuthor.setText(fullName);
 			lblArtType.setText(selectedArt.getArt_type().getName());
-			lblArtStatus.setText(selectedArt.getArt_status().getName());
-			// TODO afficher l'illustration de cette oeuvre
-			
-			/*
-			// Code non fonctionnel (+ tests) pour tenter de récupérer l'image dans la BD (mais toujours = null)
-			// Les informations entrées dans la BD ne sont pas bonnes ? Pas le bon format ? Pas bien récupérées ? 
-			
-			Image image = null;
-			try {
-				Art selectedArt = artTable.getItems().get(selectedArtLine);
-				System.out.println(selectedArt);
-				System.out.println("image bytes : " + selectedArt.getImage().length);
-				InputStream imgStream = new ByteArrayInputStream(selectedArt.getImage());
-				System.out.println("imgStream = " + imgStream);
-				BufferedImage img2 = ImageIO.read(imgStream);
-				System.out.println("img2 = " + img2);
-				ImageIO.write(img2, "jpg", new File("output.jpg"));
-				URL imageURL = getClass().getClassLoader().getResource("output.jpg");
-				image = new Image(imageURL.toExternalForm());			
-				Image nouvelleImg = new Image(imgStream);
-				// imgArt.setImage(nouvelleImg);			
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (image == null) {
-				System.out.println("image vide");
+			lblArtStatus.setText(selectedArt.getArt_status().getName());			
+			// affiche l'illustration de cette oeuvre si elle existe
+			if (selectedArt.getImage() != null) {
+				try {
+					Image image = byteArrayToImage(selectedArt.getImage());
+					imgArt.setImage(image);					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
-				System.out.println(image);
+				imgArt.setImage(null);
 			}
-			*/
 			pneArtInfo.setVisible(true);
 		}		
 	}
 	
 	private void showArtEditingPane() {
+		createAction.setDisable(true);
 		pneArtInfo.setVisible(false);
 		pneArtCreatEdit.setVisible(true);
 		artTable.setDisable(true);
 	}
 	
 	private void hideArtEditingPane() {
+		createAction.setDisable(false);
 		pneArtInfo.setVisible(false);
 		pneArtCreatEdit.setVisible(false);
 		artTable.setDisable(false);
@@ -222,10 +283,39 @@ public class CuratorControl {
 			int artDimX = Integer.parseInt(txtDimX.getText());
 			int artDimY = Integer.parseInt(txtDimY.getText());
 			int artDimZ = Integer.parseInt(txtDimZ.getText());
+			// TODO trouver comment convertir fichier image en byte[]
+			byte[] artImage = imageToByteArray(this.file);
 			Author author = cbbAuthor.getValue();
 			ArtType artType = cbbArtType.getValue();
 			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
-					null, author, null, artType);
+					artImage, author, null, artType);
+		} catch (Exception e) {
+			mainController.notifyFail();
+		}
+	}
+	
+	private void updateArt() {
+		try {
+			Art selectedArt = artTable.getItems().get(selectedArtLine);
+			int id_art = selectedArt.getId_art();
+			String artTitle = txtArtTitle.getText();
+			String artCode = txtArtCode.getText();
+			String artDates = txtArtDates.getText();
+			String artMaterials = txtMaterials.getText();			
+			int artDimX = Integer.parseInt(txtDimX.getText());
+			int artDimY = Integer.parseInt(txtDimY.getText());
+			int artDimZ = Integer.parseInt(txtDimZ.getText());
+			Author author = cbbAuthor.getValue();
+			ArtStatus artStatus = selectedArt.getArt_status();
+			ArtType artType = cbbArtType.getValue();
+			byte[] artImage = null;
+			if (this.file != null) {
+				artImage = imageToByteArray(this.file);
+			} else {
+				artImage = selectedArt.getImage();
+			}
+			mainController.updateArt(id_art, artCode, artTitle, artDates, artMaterials, artDimX,
+				artDimY, artDimZ, artImage, author, artStatus, artType);			
 		} catch (Exception e) {
 			mainController.notifyFail();
 		}
@@ -241,24 +331,24 @@ public class CuratorControl {
 		try {
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifArt.fxml"));
+			loader.setLocation(Main.class.getResource("../view/NotifSaved.fxml"));
 			// passage de ce contrôleur à la vue
 			loader.setController(this);
 			dialogArtSaved = (Pane)loader.load();
 			// réinitialisation et désactivation de la zone d'édition de salle
 			resetArtCreateEdit();
-			// réactivation de la liste d'oeuvres
-			artTable.setDisable(false);
 			// réinitialisation des drapeaux d'ajout/modification
 			addingArt = false;
 			updatingArt = false;
-			// masque la fenêtre de modif, affiche la fenêtre d'info
+			// masque la fenêtre de modification
 			hideArtEditingPane();
 			// affichage de la fenêtre pop-up
 			lblNotification.setText(message);
 			Scene scene = new Scene(dialogArtSaved);
 			notifWindow.setScene(scene);
 			notifWindow.show();
+			// réinitialisation du fichier image
+			this.file = null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -266,6 +356,17 @@ public class CuratorControl {
 		refreshData();
 	}
 	
+	/**
+	 * à la demande du contrôleur principal, affiche une notification
+	 */
+	public void notifyAuthorSaved(String message) {
+		authorSelectCtrl.notifyAuthorSaved(message);
+	}
+	
+	public void setAuthor(Author author) {
+		cbbAuthor.setItems(mainController.getAuthorData());
+		cbbAuthor.setValue(author);
+	}
 	
 	/*  ---------------------------
 	 * 
@@ -281,6 +382,7 @@ public class CuratorControl {
 		codeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getArt_code()));
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getArt_title()));
 		authorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAuthor().getLast_name()));
+		statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getArt_status().getName()));
 	}
 	
 	/**
@@ -332,7 +434,6 @@ public class CuratorControl {
 		updatingArt = false;
 		resetArtCreateEdit();
 		hideArtEditingPane();
-		showArtInfo();
 	}
 	
 	/**
@@ -349,7 +450,7 @@ public class CuratorControl {
 				addArt();
 			}
 			else if (updatingArt) {
-				//updateArt();
+				updateArt();
 			}
 		} else {
 			mainController.notifyFail();
@@ -361,7 +462,7 @@ public class CuratorControl {
 	 * @param e
 	 */
 	@FXML
-	private void confirmArtSaved(ActionEvent e) {
+	private void confirmSaved(ActionEvent e) {
 		notifWindow.close();
 	}
 	
@@ -372,5 +473,46 @@ public class CuratorControl {
 	private void handleArtTableAction(MouseEvent event) {
 		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
 		showArtInfo();		
-	}	
+	}
+	
+	/**
+	 * event listener du bouton pour ajouter un artiste : ouvre une nouvelle fenêtre
+	 */
+	@FXML
+	private void handleAuthorSelect(ActionEvent event) {
+		if (stgAuthorAddition.getModality() != Modality.APPLICATION_MODAL) {
+			stgAuthorAddition.initModality(Modality.APPLICATION_MODAL);
+		};		
+		try {
+			// lien avec la vue
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("../view/AuthorSelect.fxml"));
+			pneAuthorSelect = (Pane)loader.load();
+			// récupération du contrôleur de la vue
+			this.authorSelectCtrl = loader.getController();
+			// passage du contrôleur principal au sous-contrôleur
+			this.authorSelectCtrl.setMainControl(this.mainController);
+			// passage du sous-contrôleur (this)
+			this.authorSelectCtrl.setSubControl(this);
+			Scene scene = new Scene(pneAuthorSelect);
+			stgAuthorAddition.setScene(scene);
+			stgAuthorAddition.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * event listener du bouton pour ajouter le fichier contenant l'image de l'œuvre
+	 */
+	@FXML
+	private void handleImageSelect(ActionEvent event) {
+		// sélection du fichier JPG
+		stgImageSelect.setTitle("Choisir un fichier");
+		this.fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
+        this.file = fileChooser.showOpenDialog(stgImageSelect);
+        // affichage du nom du fichier dans le formulaire de modification de l'œuvre
+        String filename = file.getName();
+        lblImgPath.setText(filename);
+	}		
 }

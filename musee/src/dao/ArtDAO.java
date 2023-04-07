@@ -45,8 +45,8 @@ public class ArtDAO extends DAO<Art> {
 	public boolean create(Art art) {
 		boolean success = true;
 		try {
-			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+", "+TITLE+", "+
-					DATE+", "+MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+", "+TITLE+", "+DATE+", "+
+					MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ", "+IMAGE +") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -58,7 +58,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(8, art.getDim_x());
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
-			//pst.setArray(11, null);
+			pst.setBytes(11, art.getImage());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -81,9 +81,31 @@ public class ArtDAO extends DAO<Art> {
 	}
 
 	@Override
-	public boolean update(Art art) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(Art art) {		
+		boolean success = true;
+		try {
+			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+"=?, "+CODE+"=?, "+TITLE+"=?, "+
+					DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=? WHERE "+PK+"= ?";
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, art.getArt_type().getId_Art_type());
+			pst.setInt(2, art.getAuthor().getId_author());
+			pst.setInt(3, art.getArt_status().getId_art_status());
+			pst.setString(4, art.getArt_code());
+			pst.setString(5, art.getArt_title());
+			pst.setString(6, art.getCreation_date());
+			pst.setString(7, art.getMaterials());
+			pst.setInt(8, art.getDim_x());
+			pst.setInt(9, art.getDim_y());
+			pst.setInt(10, art.getDim_z());
+			pst.setBytes(11, art.getImage());
+			pst.setInt(12, art.getId_art());
+			pst.executeUpdate();
+			data.put(art.getId_art(), art);
+		} catch (SQLException e) {
+			success=false;
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	@Override

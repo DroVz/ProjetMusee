@@ -1,32 +1,12 @@
 package application;
 	
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.List;
 
-import museum.Art;
-import museum.ArtStatus;
-import museum.ArtType;
-import museum.Author;
-import museum.Door;
-import museum.Role;
-import museum.Room;
-import museum.User;
 import controller.ArchitectControl;
 import controller.CuratorControl;
 import controller.LoginControl;
+import controller.ZoneManagementControl;
 import dao.ArtDAO;
 import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
@@ -35,6 +15,29 @@ import dao.DoorDAO;
 import dao.RoleDAO;
 import dao.RoomDAO;
 import dao.UserDAO;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import museum.Art;
+import museum.ArtStatus;
+import museum.ArtType;
+import museum.Author;
+import museum.Door;
+import museum.Role;
+import museum.Room;
+import museum.User;
 
 public class Main extends Application {
 	
@@ -47,20 +50,26 @@ public class Main extends Application {
 	private AnchorPane loginPane = null;
 	private AnchorPane architectPane = null;
 	private AnchorPane curatorPane = null;
+	private AnchorPane showRoomPane = null;
 	
 	// sous-contrôleurs des différentes sous-fenêtres
 	private LoginControl loginCtrl = null;
 	private ArchitectControl architectCtrl = null;
 	private CuratorControl curatorCtrl = null;
+	private ZoneManagementControl showRoomCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
 	private ObservableList<ArtType> artTypeData = FXCollections.observableArrayList();
+	private ObservableList<ArtStatus> artStatusData = FXCollections.observableArrayList();
 	private ObservableList<Author> authorData = FXCollections.observableArrayList();
 	private ObservableList<Door> doorData = FXCollections.observableArrayList();	
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();
+	
+	@FXML
+	private Button btnQuit;
 
 	
 	public Main() {
@@ -107,6 +116,15 @@ public class Main extends Application {
 			artTypeData.add(artType);
 		}
 		return artTypeData;
+	}
+	
+	public ObservableList<ArtStatus> getArtStatusData() {
+		artStatusData = FXCollections.observableArrayList();
+		List<ArtStatus> artStatuses = ArtStatusDAO.getInstance().readAll();
+		for (ArtStatus artStatus : artStatuses) {
+			artStatusData.add(artStatus);
+		}
+		return artStatusData;
 	}
 	
 	public ObservableList<Art> getArtData() {
@@ -168,8 +186,7 @@ public class Main extends Application {
 		if (RoomDAO.getInstance().create(room)) {
 			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
 		}		
-	}
-	
+	}	
 	public void updateRoom(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(id_room, name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().update(room)) {
@@ -184,14 +201,37 @@ public class Main extends Application {
 		}
 	}
 	
-	public void addArt(String art_code, String art_title, String creation_date, String materials,
-			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
-		// Par défaut, une œuvre est ajoutée dans la réserve
+	public void addArt(String art_code, String art_title, String creation_date, String materials, int dim_x,
+			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+		// par défaut, une œuvre est placée "En réserve" (id_art_status = 1)
 		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
 		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
 				author, artStatus, art_type);
 		if (ArtDAO.getInstance().create(art)) {
-			curatorCtrl.notifyArtSaved("L'œuvre a été ajoutée à la réserve");
+			curatorCtrl.notifyArtSaved("L'œuvre a été ajoutée à la base de données");
+		}		
+	}
+	
+	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
+			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
+				author, art_status, art_type);
+		if (ArtDAO.getInstance().update(art)) {
+			curatorCtrl.notifyArtSaved("L'œuvre a été modifiée");
+		}		
+	}		
+	
+	public void addAuthor(String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().create(author)) {
+			curatorCtrl.notifyAuthorSaved("Auteur enregistré");
+		}		
+	}
+	
+	public void updateAuthor(int id_author, String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(id_author, last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().update(author)) {
+			curatorCtrl.notifyAuthorSaved("Auteur enregistré");
 		}		
 	}
 	
@@ -223,7 +263,9 @@ public class Main extends Application {
 			loader.setController(this);
 			mainWindowRoot = (BorderPane)loader.load();
 			// affichage de la fenêtre principale
-			Scene scene = new Scene(mainWindowRoot);
+			double height = Screen.getPrimary().getBounds().getHeight();   
+			double width = Screen.getPrimary().getBounds().getWidth();   
+			Scene scene = new Scene(mainWindowRoot, width, height);
 			mainWindow.setScene(scene);
 			mainWindow.show();
 		} catch (IOException e) {
@@ -286,6 +328,8 @@ public class Main extends Application {
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(Main.class.getResource("../view/Curator.fxml"));
 				curatorPane = (AnchorPane)loader.load();
+				// TEST largeur de sous-fenêtre
+				curatorPane.setPrefWidth(Screen.getPrimary().getBounds().getWidth());
 				// récupération du contrôleur de la vue
 				this.curatorCtrl = loader.getController();
 				// passage du contrôleur principal (this) au sous-contrôleur
@@ -299,6 +343,25 @@ public class Main extends Application {
 		}
 	}
 	
+	public void showShowRoomPane() {
+		try {
+			if (showRoomPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/ShowRoom.fxml"));
+				showRoomPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.showRoomCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.showRoomCtrl.setMainControl(this);
+			}
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(showRoomPane);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * event listener du bouton "OK" du pop-up de notification d'échec
 	 * @param e
@@ -306,6 +369,11 @@ public class Main extends Application {
 	@FXML
 	private void confirmFail(ActionEvent e) {
 		notifWindow.close();
+	}
+	
+	@FXML
+	private void handleQuitBtn(ActionEvent e) {
+		Platform.exit();
 	}
 			
 	/**

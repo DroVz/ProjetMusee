@@ -25,6 +25,7 @@ public class Connect {
 				ds.setUser(ID);
 				ds.setPassword(MDP);
 				ds.setServerName("localhost\\SQLEXPRESS");
+	//			ds.setServerName("localhost");
 				ds.setDatabaseName("museum");
 				connection = ds.getConnection();
 				System.out.println("connecté");
@@ -90,52 +91,5 @@ public class Connect {
 			System.out.println("echec de la fermeture");
 		}
 		connection=null;
-	}
-
-	
-	/* TODO vérifier si ces méthodes servent vraiment, j'ai l'impression qu'elles
-	 * ne sonts appelées par aucune fonction dans le projet du prof !
-	 * 
-	 * 
-
-	 * Requ�te qui permet de r�cup�rer le plus grand id de la table, a priori celui qui vient d'�tre affect�
-	 * � une ligne cr��e via identity.
-	 * @param cle
-	 * @param table
-	 * @return
-	public static int getMaxId(String cle, String table) {
-		String requete = "SELECT MAX("+cle+")as max FROM "+table;
-		ResultSet rs = Connect.executeQuery(requete);
-		int id= -1;
-		try {
-			rs.next();
-			id = rs.getInt("max");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return id;
-	}
-	
-
-
-	public static List<Integer> getLesIds(String attribut, String table, String clauseWhere) {
-		String requete = "SELECT DISTINCT "+attribut+" FROM "+table;
-		if (clauseWhere!=null) {
-			requete += " WHERE "+clauseWhere;
-		}		
-		ResultSet rs = Connect.executeQuery(requete);
-		List<Integer> liste = new ArrayList<Integer>();
-		try {
-			while (rs.next()) {
-			int id = rs.getInt(attribut);
-			liste.add(id);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return liste;		
 	}	
-	
-		 */
-	
 }
