@@ -1,4 +1,4 @@
-package controller;
+package controllerView;
 
 import application.Main;
 import javafx.event.ActionEvent;

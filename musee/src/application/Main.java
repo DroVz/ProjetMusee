@@ -3,10 +3,10 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import controller.ArchitectControl;
-import controller.CuratorControl;
-import controller.LoginControl;
-import controller.ZoneManagementControl;
+import controllerView.ArchitectControl;
+import controllerView.CuratorControl;
+import controllerView.LoginControl;
+import controllerView.ShowRoomControl;
 import dao.ArtDAO;
 import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
@@ -53,7 +53,7 @@ public class Main extends Application {
 	private LoginControl loginCtrl = null;
 	private ArchitectControl architectCtrl = null;
 	private CuratorControl curatorCtrl = null;
-	private ZoneManagementControl showRoomCtrl = null;
+	private ShowRoomControl showRoomCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();

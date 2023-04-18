@@ -1,12 +1,16 @@
-package controller;
+package controllerView;
+import java.util.ArrayList;
 import java.util.List;
 
 import application.Main;
-import javafx.beans.binding.StringExpression;
+import controller.EditPlanControl;
+import controllerModel.ArtControl;
+import controllerModel.RoomControl;
+import controllerModel.SpotControl;
+import controllerModel.ZoneControl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
@@ -16,12 +20,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import museum.Area;
 import museum.Art;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;
 
-public class ZoneManagementControl {
+public class ShowRoomControl {
 	// Tree View
 	@FXML 
 	private TreeView<?> globalTreeView;
@@ -48,6 +53,8 @@ public class ZoneManagementControl {
 	private AnchorPane zoneAnchorPane;
 	@FXML 
 	private AnchorPane spotAnchorPane;
+	@FXML
+	private AnchorPane drawSection;
 	
 	// Anchor Pane State 
 	private boolean stateOfZoneAnchorPane = false;
@@ -110,9 +117,11 @@ public class ZoneManagementControl {
 	// Private property 
 	private int selectedZoneLine = 0; 
 	private int selectedSpotLine = 0; 
+	private EditPlanControl editPlanControl;
 	
-	public ZoneManagementControl() {
+	public ShowRoomControl() {
 		super();
+	
 	}
 	
 	/**
@@ -124,12 +133,18 @@ public class ZoneManagementControl {
 	}
 	@FXML 
 	private void initialize() {
+		// Initialisation des éléments FXML
 		this.initializeZoneTableView();
 		this.initializeSpotTableView();
 		this.initializeRoomChoiceBox();
 		this.initializeZoneChoiceBox();
 		this.initializeArtChoiceBox();
 		this.initializeTreeView();
+		
+		// Chargement du plan 2D
+		this.editPlanControl = new EditPlanControl(this.drawSection);
+		this.initializePlan();
+		
 	}
 	
 	//Button Actions 
@@ -139,10 +154,10 @@ public class ZoneManagementControl {
 	}
 	@FXML
 	private void handleDeleteZone(ActionEvent event) {
-		ZoneControl zoneControl = ZoneControl.getInstance();
 		
 		Zone selectedZone = zoneTableView.getItems().get(selectedZoneLine);
-		zoneControl.deleteZone(selectedZone);
+		SpotControl.getInstance().deleteSpotOf(selectedZone);
+		ZoneControl.getInstance().deleteZone(selectedZone);
 		selectedZoneLine = 0;
 		
 		this.refreshWindow();
@@ -166,6 +181,12 @@ public class ZoneManagementControl {
 		inputDimYZone.setText("");
 		inputPosXZone.setText("");
 		inputPosYZone.setText("");
+	}
+	private void setZoneError() {
+		inputDimXZone.setText("Erreur");
+		inputDimYZone.setText("Erreur");
+		inputPosXZone.setText("Erreur");
+		inputPosYZone.setText("Erreur");
 	}
 	
 	@FXML
@@ -203,7 +224,12 @@ public class ZoneManagementControl {
 		inputPosYSpot.setText("");
 		inputPosZSpot.setText("");
 	}
-	
+	private void setSpotError() {
+		inputDimXSpot.setText("Erreur");
+		inputDimYSpot.setText("Erreur");
+		inputPosXSpot.setText("Erreur");
+		inputPosYSpot.setText("Erreur");
+	}
 	//Clicked Actions 
 	@FXML 
 	private void handleSelectZoneItem(MouseEvent event) {
@@ -213,6 +239,8 @@ public class ZoneManagementControl {
 	private void handleSelectSpotItem(MouseEvent event) {
 		selectedSpotLine = spotTableView.getSelectionModel().getSelectedIndex();
 	}
+	
+	
 	
 	// private sub and function 
 	private void addZone() {
@@ -225,7 +253,13 @@ public class ZoneManagementControl {
 		int zonePosY = Integer.parseInt(inputPosYZone.getText());
 		
 		Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
-		ZoneControl.getInstance().createZone(zone);
+		List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
+		if (!zone.overlaps(checkArea)) {
+			ZoneControl.getInstance().createZone(zone);
+		} else {
+			this.resetZoneTextField();
+			this.setZoneError();
+		}
 	}
 	
 	private void addSpot() {
@@ -241,7 +275,14 @@ public class ZoneManagementControl {
 		int spotPosZ = Integer.parseInt(inputPosZSpot.getText());
 		
 		Spot spot = new Spot(spotName,spotDimX,spotDimY,spotDimZ, spotPosX, spotPosY, spotPosZ, zone, art);
-		SpotControl.getInstance().createSpot(spot);
+		 
+		List<Area> checkArea = new ArrayList<Area>(SpotControl.getInstance().readAll());
+		if (!spot.overlaps(checkArea)) {
+			SpotControl.getInstance().createSpot(spot);
+		} else {
+			this.resetSpotTextField();
+			this.setSpotError();
+		}
 	}
 	
 	private void initializeZoneTableView() {
@@ -288,7 +329,7 @@ public class ZoneManagementControl {
 					((TreeItem) item).getChildren().add(new TreeItem (zone.getName()));
 					for(Spot spot : spots) {
 						for(Object subItem : ((TreeItem) item).getChildren().toArray()) {
-							if(spot.getZone().getName().equals(zone.getName())) {
+							if(spot.getZone().getName().equals(((TreeItem) subItem).getValue().toString())) {
 								((TreeItem) subItem).getChildren().add(new TreeItem (spot.getName()));
 							}
 						}
@@ -296,8 +337,14 @@ public class ZoneManagementControl {
 				}
 			}
 		}
-		
+	
 		globalTreeView.setRoot(globalItem);
+	}
+	
+	private void initializePlan() {
+		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
+		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
+		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());
 	}
 	
 	private void refreshWindow() {
@@ -307,6 +354,8 @@ public class ZoneManagementControl {
 		this.initializeZoneChoiceBox();
 		this.initializeArtChoiceBox();
 		this.initializeTreeView();
-	}
+		this.editPlanControl.CleanPlan();
+		this.initializePlan();
+		}
 	
 }

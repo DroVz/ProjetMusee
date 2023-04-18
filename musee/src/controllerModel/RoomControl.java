@@ -1,4 +1,4 @@
-package controller;
+package controllerModel;
 
 import java.util.List;
 

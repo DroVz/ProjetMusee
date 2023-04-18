@@ -1,4 +1,4 @@
-package controller;
+package controllerView;
 
 import java.io.IOException;
 
