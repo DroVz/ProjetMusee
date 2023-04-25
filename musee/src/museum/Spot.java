@@ -77,4 +77,14 @@ public class Spot extends Area {
 		this.zone = zone;
 	}
 	
+	public boolean insideParent() {
+		int numberOfPointInside = 0;
+		for(Point point : this.getPoints()) {
+			if (this.zone.checkPoint(point)) {
+				numberOfPointInside ++;
+			}
+		}
+		return numberOfPointInside == this.getPoints().size() + 1;
+	}
+	
 }

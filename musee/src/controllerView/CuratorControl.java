@@ -227,7 +227,7 @@ public class CuratorControl {
 			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
 					null, author, null, artType);
 		} catch (Exception e) {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	
@@ -352,7 +352,7 @@ public class CuratorControl {
 				//updateArt();
 			}
 		} else {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	

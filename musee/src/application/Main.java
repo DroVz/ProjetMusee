@@ -74,10 +74,10 @@ public class Main extends Application {
 	/**
 	 * à la demande d'un des sous-contrôleurs, affiche une notification "échec de l'enregistrement"
 	 */
-	public void notifyFail() {
+	public void notifyFail(String messageToShow) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Échec de l'enregistrement");
+			notifWindow.setTitle(messageToShow);
 		};		
 		try {
 			// lien avec la vue

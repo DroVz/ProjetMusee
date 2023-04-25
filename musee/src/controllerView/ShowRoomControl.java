@@ -29,7 +29,7 @@ import museum.Zone;
 public class ShowRoomControl {
 	// Tree View
 	@FXML 
-	private TreeView<?> globalTreeView;
+	private TreeView<String> globalTreeView;
 	
 	private Main mainControler;
 	// Table View
@@ -244,22 +244,26 @@ public class ShowRoomControl {
 	
 	// private sub and function 
 	private void addZone() {
-		
-		String zoneName = inputNameZone.getText();
-		Room room = roomChoiceBox.getValue();
-		int zoneDimX = Integer.parseInt(inputDimXZone.getText());
-		int zoneDimY = Integer.parseInt(inputDimYZone.getText());
-		int zonePosX = Integer.parseInt(inputPosXZone.getText());
-		int zonePosY = Integer.parseInt(inputPosYZone.getText());
-		
-		Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
-		List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
-		if (!zone.overlaps(checkArea)) {
-			ZoneControl.getInstance().createZone(zone);
-		} else {
-			this.resetZoneTextField();
-			this.setZoneError();
+		try {
+			String zoneName = inputNameZone.getText();
+			Room room = roomChoiceBox.getValue();
+			int zoneDimX = Integer.parseInt(inputDimXZone.getText());
+			int zoneDimY = Integer.parseInt(inputDimYZone.getText());
+			int zonePosX = Integer.parseInt(inputPosXZone.getText());
+			int zonePosY = Integer.parseInt(inputPosYZone.getText());
+			
+			Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
+			List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
+			if (!zone.overlaps(checkArea) && zone.insideParent()) {
+				ZoneControl.getInstance().createZone(zone);
+			} else {
+				this.resetZoneTextField();
+				this.setZoneError();
+			}
 		}
+		catch (NumberFormatException numberException) {
+			mainControler.notifyFail("Valeurs inscrites incorectes");
+		} 
 	}
 	
 	private void addSpot() {
@@ -277,7 +281,7 @@ public class ShowRoomControl {
 		Spot spot = new Spot(spotName,spotDimX,spotDimY,spotDimZ, spotPosX, spotPosY, spotPosZ, zone, art);
 		 
 		List<Area> checkArea = new ArrayList<Area>(SpotControl.getInstance().readAll());
-		if (!spot.overlaps(checkArea)) {
+		if (!spot.overlaps(checkArea) && spot.insideParent()) {
 			SpotControl.getInstance().createSpot(spot);
 		} else {
 			this.resetSpotTextField();
@@ -285,6 +289,7 @@ public class ShowRoomControl {
 		}
 	}
 	
+	// Initialisation des éléments 
 	private void initializeZoneTableView() {
 			this.zoneTableView.getItems().setAll(ZoneControl.getInstance().readAll());
 			idZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
@@ -309,34 +314,45 @@ public class ShowRoomControl {
 	}
 	
 	private void initializeTreeView() {
+		// Récupère les éléments du musée 
 		List<Room> rooms = RoomControl.getInstance().readAll();
 		List<Zone> zones = ZoneControl.getInstance().readAll();
 		List<Spot> spots = SpotControl.getInstance().readAll();
-		
-		TreeItem globalItem = new TreeItem("Room");
-		TreeItem roomItem;
+		// Liste pour retrouver l'adresse mémoire des objets créés
+		ArrayList<TreeItem<String>> roomItems = new ArrayList<TreeItem<String>>();
+		ArrayList<TreeItem<String>> zoneItems = new ArrayList<TreeItem<String>>();
+		// Arbre éditable
+		TreeItem<String> globalItem = new TreeItem<String>("Room");
+		TreeItem<String>  treeItem;
 		
 		// Ajout des Rooms 
 		for(Room room : rooms) {
-			roomItem = new TreeItem(room.getName());
-			globalItem.getChildren().add(roomItem);
+			treeItem = new TreeItem<String>(room.getName());
+			globalItem.getChildren().add(treeItem);
+			roomItems.add(treeItem);
 		}
 		
-		// Ajout des Zones 
-		for(Zone zone : zones) {
-			for(Object item : globalItem.getChildren().toArray()) {
-				if (((TreeItem) item).getValue().toString().equals(zone.getRoom().getName())) {
-					((TreeItem) item).getChildren().add(new TreeItem (zone.getName()));
-					for(Spot spot : spots) {
-						for(Object subItem : ((TreeItem) item).getChildren().toArray()) {
-							if(spot.getZone().getName().equals(((TreeItem) subItem).getValue().toString())) {
-								((TreeItem) subItem).getChildren().add(new TreeItem (spot.getName()));
-							}
-						}
-					}
+		// Ajout des Zones
+		for(TreeItem<String> item : roomItems) {
+			for(Zone zone : zones) {
+				if (item.getValue().equals(zone.getRoom().getName())) {
+					treeItem = new TreeItem<String>(zone.getName());
+					item.getChildren().add(treeItem);
+					zoneItems.add(treeItem);
 				}
 			}
 		}
+		
+		// Ajout des spots
+		for(TreeItem<String> item : zoneItems) {
+			for(Spot spot : spots) {
+				if (item.getValue().equals(spot.getZone().getName())) {
+					treeItem = new TreeItem<String>(spot.getName());
+					item.getChildren().add(treeItem);
+				}
+			}
+		}
+		
 	
 		globalTreeView.setRoot(globalItem);
 	}
