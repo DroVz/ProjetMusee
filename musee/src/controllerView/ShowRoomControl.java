@@ -5,6 +5,7 @@ import java.util.List;
 import application.Main;
 import controller.EditPlanControl;
 import controllerModel.ArtControl;
+import controllerModel.Notify;
 import controllerModel.RoomControl;
 import controllerModel.SpotControl;
 import controllerModel.ZoneControl;
@@ -286,6 +287,7 @@ public class ShowRoomControl {
 		} else {
 			this.resetSpotTextField();
 			this.setSpotError();
+			Notify.GetInstance().showNotif("Erreur emplacement", "Le dimension ou le positionnement de l'emplacement est incorecte !");
 		}
 	}
 	
