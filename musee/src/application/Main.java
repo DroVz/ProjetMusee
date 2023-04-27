@@ -3,10 +3,10 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import controller.ArchitectControl;
-import controller.CuratorControl;
-import controller.LoginControl;
-import controller.ZoneManagementControl;
+import controllerView.ArchitectControl;
+import controllerView.CuratorControl;
+import controllerView.LoginControl;
+import controllerView.ShowRoomControl;
 import dao.ArtDAO;
 import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
@@ -56,7 +56,7 @@ public class Main extends Application {
 	private LoginControl loginCtrl = null;
 	private ArchitectControl architectCtrl = null;
 	private CuratorControl curatorCtrl = null;
-	private ZoneManagementControl showRoomCtrl = null;
+	private ShowRoomControl showRoomCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -81,10 +81,10 @@ public class Main extends Application {
 	/**
 	 * à la demande d'un des sous-contrôleurs, affiche une notification "échec de l'enregistrement"
 	 */
-	public void notifyFail() {
+	public void notifyFail(String messageToShow) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Échec de l'enregistrement");
+			notifWindow.setTitle(messageToShow);
 		};		
 		try {
 			// lien avec la vue

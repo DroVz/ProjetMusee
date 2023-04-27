@@ -1,4 +1,4 @@
-package controller;
+package controllerView;
 
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import application.Main;
+import controller.AuthorSelectControl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -291,7 +292,7 @@ public class CuratorControl {
 			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
 					artImage, author, null, artType);
 		} catch (Exception e) {
-			mainController.notifyFail();
+			mainController.notifyFail("Un problème est survenu !");
 		}
 	}
 	
@@ -318,7 +319,7 @@ public class CuratorControl {
 			mainController.updateArt(id_art, artCode, artTitle, artDates, artMaterials, artDimX,
 				artDimY, artDimZ, artImage, author, artStatus, artType);			
 		} catch (Exception e) {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	
@@ -454,7 +455,7 @@ public class CuratorControl {
 				updateArt();
 			}
 		} else {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	

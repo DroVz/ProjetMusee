@@ -2,33 +2,23 @@ package museum;
 
 import java.util.List;
 
-public class Zone {
+public class Zone extends Area {
 	private int id;
 	private String name;
-	private int dim_x;
-	private int dim_y;
-	private int pos_x;
-	private int pos_y;
 	private Room room;
 		
 	private List<Spot> spots;
 
 	public Zone(int id, String name, int dim_x, int dim_y, int pos_x, int pos_y, Room room) {
+		super(pos_x, pos_y, dim_x, dim_y);
 		this.id = id;
 		this.name = name;
-		this.dim_x = dim_x;
-		this.dim_y = dim_y;
-		this.pos_x = pos_x;
-		this.pos_y = pos_y;
 		this.room = room;
 	}
 	
 	public Zone(String name, int dim_x, int dim_y, int pos_x, int pos_y, Room room) {
+		super(pos_x, pos_y, dim_x, dim_y);
 		this.name = name;
-		this.dim_x = dim_x;
-		this.dim_y = dim_y;
-		this.pos_x = pos_x;
-		this.pos_y = pos_y;
 		this.room = room;
 	}
 	
@@ -49,38 +39,6 @@ public class Zone {
 		this.name = name;
 	}
 
-	public int getDim_x() {
-		return dim_x;
-	}
-
-	public void setDim_x(int dim_x) {
-		this.dim_x = dim_x;
-	}
-
-	public int getDim_y() {
-		return dim_y;
-	}
-
-	public void setDim_y(int dim_y) {
-		this.dim_y = dim_y;
-	}
-
-	public int getPos_x() {
-		return pos_x;
-	}
-
-	public void setPos_x(int pos_x) {
-		this.pos_x = pos_x;
-	}
-
-	public int getPos_y() {
-		return pos_y;
-	}
-
-	public void setPos_y(int pos_y) {
-		this.pos_y = pos_y;
-	}
-
 	public List<Spot> getSpots() {
 		return spots;
 	}
@@ -97,6 +55,14 @@ public class Zone {
 		this.room = room;
 	}
 
+	@Override
+	public String toString() {
+		return this.name;
+		
+	}
 
-
+	public boolean insideParent() {
+		return this.getPos_x() + this.getDim_x() <= this.getRoom().getDim_x() 
+				&& this.getPos_y() + this.getDim_y() <= this.getRoom().getDim_y();
+	}
 }
