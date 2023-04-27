@@ -128,9 +128,6 @@ public class Art {
 	
 	@Override
 	public String toString() {
-		return "Object [id=" + id_art + ", code=" + art_code + ", titre=" + art_title +
-				", date=" + creation_date + ", matériaux=" + materials + ", dim_x=" + dim_x +
-				", dim_y=" + dim_y + ", dim_z=" + dim_z + ", auteur=" + author.getLast_name() +
-				", nomStatut=" + art_status.getName() + ", typeObjet=" + art_type.getName() + "]";
+		return this.art_title + " : " + this.author;
 	}
 }

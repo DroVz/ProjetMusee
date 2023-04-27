@@ -3,10 +3,10 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import controller.ArchitectControl;
-import controller.CuratorControl;
-import controller.LoginControl;
-import controller.ZoneManagementControl;
+import controllerView.ArchitectControl;
+import controllerView.CuratorControl;
+import controllerView.LoginControl;
+import controllerView.ShowRoomControl;
 import dao.ArtDAO;
 import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
@@ -58,7 +58,7 @@ public class Main extends Application {
 	private LoginControl loginCtrl = null;
 	private ArchitectControl architectCtrl = null;
 	private CuratorControl curatorCtrl = null;
-	private ZoneManagementControl showRoomCtrl = null;
+	private ShowRoomControl showRoomCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -84,10 +84,10 @@ public class Main extends Application {
 	/**
 	 * à la demande d'un des sous-contrôleurs, affiche une notification "échec de l'enregistrement"
 	 */
-	public void notifyFail() {
+	public void notifyFail(String messageToShow) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Échec de l'enregistrement");
+			notifWindow.setTitle(messageToShow);
 		};		
 		try {
 			// lien avec la vue
@@ -244,6 +244,11 @@ public class Main extends Application {
 		}		
 	}
 	
+	public Art getFullArtData(int id_art) {
+		Art fullArt = ArtDAO.getInstance().read(id_art);
+		return fullArt;
+	}
+	
 	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
 			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
 		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
@@ -348,8 +353,6 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
-	// TODO Tests Claire ci-dessous
 	
 	/**
 	 * affiche la sous-fenêtre du rôle "conservateur"

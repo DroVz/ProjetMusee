@@ -1,7 +1,9 @@
-package controller;
+package controllerView;
 
 import java.io.IOException;
 
+
+import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

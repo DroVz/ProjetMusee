@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 
+import application.Main;
+import controllerView.CuratorControl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +19,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import application.Main;
 import museum.Author;
 
 public class AuthorSelectControl {

@@ -1,4 +1,4 @@
-package controller;
+package controllerView;
 
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import application.Main;
+import controller.AuthorSelectControl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -226,7 +227,9 @@ public class CuratorControl {
 	 */
 	private void showArtInfo() {
 		if (selectedArtLine != -1) {
-			Art selectedArt = artTable.getItems().get(selectedArtLine);
+			Art lightArt = artTable.getItems().get(selectedArtLine);
+			// TODO - en cours - récupération des infos complètes de l'œuvre
+			Art selectedArt = mainController.getFullArtData(lightArt.getId_art());
 			lblArtTitle.setText(selectedArt.getArt_title());
 			lblArtCode.setText(selectedArt.getArt_code());
 			lblArtDates.setText(selectedArt.getCreation_date());
@@ -283,14 +286,13 @@ public class CuratorControl {
 			int artDimX = Integer.parseInt(txtDimX.getText());
 			int artDimY = Integer.parseInt(txtDimY.getText());
 			int artDimZ = Integer.parseInt(txtDimZ.getText());
-			// TODO trouver comment convertir fichier image en byte[]
 			byte[] artImage = imageToByteArray(this.file);
 			Author author = cbbAuthor.getValue();
 			ArtType artType = cbbArtType.getValue();
 			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
 					artImage, author, null, artType);
 		} catch (Exception e) {
-			mainController.notifyFail();
+			mainController.notifyFail("Un problème est survenu !");
 		}
 	}
 	
@@ -317,7 +319,7 @@ public class CuratorControl {
 			mainController.updateArt(id_art, artCode, artTitle, artDates, artMaterials, artDimX,
 				artDimY, artDimZ, artImage, author, artStatus, artType);			
 		} catch (Exception e) {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	
@@ -453,7 +455,7 @@ public class CuratorControl {
 				updateArt();
 			}
 		} else {
-			mainController.notifyFail();
+			mainController.notifyFail("Échec de l'enregistrement");
 		}
 	}
 	
@@ -512,6 +514,7 @@ public class CuratorControl {
 		this.fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
         this.file = fileChooser.showOpenDialog(stgImageSelect);
         // affichage du nom du fichier dans le formulaire de modification de l'œuvre
+        // TODO file peut être vide
         String filename = file.getName();
         lblImgPath.setText(filename);
 	}		
