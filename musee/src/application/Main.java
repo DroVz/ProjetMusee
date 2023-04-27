@@ -60,6 +60,7 @@ public class Main extends Application {
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
+	private ObservableList<Art> availableArtData = FXCollections.observableArrayList();
 	private ObservableList<ArtType> artTypeData = FXCollections.observableArrayList();
 	private ObservableList<ArtStatus> artStatusData = FXCollections.observableArrayList();
 	private ObservableList<Author> authorData = FXCollections.observableArrayList();
@@ -136,6 +137,15 @@ public class Main extends Application {
 		return artData;
 	}
 	
+	public ObservableList<Art> getAvailableArtData() {
+		artData = FXCollections.observableArrayList();
+		List<Art> arts = ArtDAO.getInstance().readAllAvailable();
+		for (Art art : arts) {
+			artData.add(art);
+		}
+		return artData;
+	}
+	
 	public ObservableList<Author> getAuthorData() {
 		authorData = FXCollections.observableArrayList();
 		List<Author> authors = AuthorDAO.getInstance().readAll();
@@ -201,12 +211,13 @@ public class Main extends Application {
 		}
 	}
 	
-	public void addArt(String art_code, String art_title, String creation_date, String materials, int dim_x,
-			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+	public void addArt(String art_code, String art_title, String creation_date,
+			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
+			ArtStatus art_status, ArtType art_type, boolean owner) {
 		// par défaut, une œuvre est placée "En réserve" (id_art_status = 1)
 		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
 		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
-				author, artStatus, art_type);
+				author, artStatus, art_type, owner);
 		if (ArtDAO.getInstance().create(art)) {
 			curatorCtrl.notifyArtSaved("L'œuvre a été ajoutée à la base de données");
 		}		
@@ -217,10 +228,11 @@ public class Main extends Application {
 		return fullArt;
 	}
 	
-	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
-			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+	public void updateArt(int art_id, String art_code, String art_title, String creation_date,
+			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
+			ArtStatus art_status, ArtType art_type, boolean owner) {
 		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
-				author, art_status, art_type);
+				author, art_status, art_type, owner);
 		if (ArtDAO.getInstance().update(art)) {
 			curatorCtrl.notifyArtSaved("L'œuvre a été modifiée");
 		}		

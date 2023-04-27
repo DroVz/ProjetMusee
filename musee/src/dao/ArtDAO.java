@@ -28,10 +28,11 @@ public class ArtDAO extends DAO<Art> {
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
 	private static final String IMAGE = "image";
+	private static final String OWNER = "owner";
 	
 	private static ArtDAO instance=null;
 	
-	// hashmap dégradé pour stocker les œuvres sans l'image
+	// hashmap dégradée pour stocker les œuvres sans l'image
 	private final HashMap<Integer, Art> dataLight = new HashMap<Integer, Art>();
 	
 	public static ArtDAO getInstance(){
@@ -49,8 +50,9 @@ public class ArtDAO extends DAO<Art> {
 	public boolean create(Art art) {
 		boolean success = true;
 		try {
-			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+", "+TITLE+", "+DATE+", "+
-					MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ", "+IMAGE +") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+", "+
+					TITLE+", "+DATE+", "+MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ", "+IMAGE +", "+OWNER+")"
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -63,6 +65,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
 			pst.setBytes(11, art.getImage());
+			pst.setBoolean(12, art.isOwner());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -88,8 +91,9 @@ public class ArtDAO extends DAO<Art> {
 	public boolean update(Art art) {		
 		boolean success = true;
 		try {
-			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+"=?, "+CODE+"=?, "+TITLE+"=?, "+
-					DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=? WHERE "+PK+"= ?";
+			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+
+					"=?, "+CODE+"=?, "+TITLE+"=?, "+DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+
+					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+OWNER+"=? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -103,6 +107,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(10, art.getDim_z());
 			pst.setBytes(11, art.getImage());
 			pst.setInt(12, art.getId_art());
+			pst.setBoolean(13, art.isOwner());
 			pst.executeUpdate();
 			data.put(art.getId_art(), art);
 		} catch (SQLException e) {
@@ -111,8 +116,12 @@ public class ArtDAO extends DAO<Art> {
 		}
 		return success;
 	}
-
-	// TODO à utiliser avec la hashmap complète, quand on veut les détails complets d'une oeuvre (clic dessus)
+ 
+	/**
+	 * retourne les données complètes de l'œuvre (image incluse)
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public Art read(int id) {
 		Art art = null;
@@ -135,25 +144,25 @@ public class ArtDAO extends DAO<Art> {
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
 				byte[] image = rs.getBytes(IMAGE);
+				boolean owner = rs.getBoolean(OWNER);
 				ArtType art_type = ArtTypeDAO.getInstance().read(ref_art_type);
 				Author author = AuthorDAO.getInstance().read(ref_author);
 				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
 				art = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
-						image, author, art_status, art_type);
+						image, author, art_status, art_type, owner);
 				data.put(id, art);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		// TODO à supprimer
-		// lignes test nombre de read d'une classe
-		nbRead += 1;
-		System.out.println(nbRead + " (readFull)");
-		//
 		return art;
 	}
 	
-	// TODO à utiliser avec la hashmap light, quand on veut les infos d'une oeuvre sans charger la photo
+	/**
+	 * retourne les données partielles de l'œuvre (image non incluse)
+	 * @param id
+	 * @return
+	 */
 	public Art readLight(int id) {
 		Art artLight = null;
 		if (dataLight.containsKey(id)) {
@@ -174,25 +183,22 @@ public class ArtDAO extends DAO<Art> {
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
+				boolean owner = rs.getBoolean(OWNER);
 				ArtType art_type = ArtTypeDAO.getInstance().read(ref_art_type);
 				Author author = AuthorDAO.getInstance().read(ref_author);
 				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
 				artLight = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
-						null, author, art_status, art_type);
+						null, author, art_status, art_type, owner);
 				dataLight.put(id, artLight);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		// TODO à supprimer
-		// lignes test nombre de read d'une classe
-		nbRead += 1;
-		System.out.println(nbRead + " (readLight)");
 		return artLight;
 	}
 	
 	/**
-	 * récupère la liste d'œuvres en BD (version light - sans photo)
+	 * retourne la liste d'œuvres en BD (version light - sans photo)
 	 * @return
 	 */
 	public List<Art> readAll() {
@@ -200,6 +206,29 @@ public class ArtDAO extends DAO<Art> {
 		Art art = null;
 		try {			
 			String requete = "SELECT * FROM " + TABLE;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLight(id_art);
+				art_objects.add(art);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return art_objects;		
+	}
+	
+	/**
+	 * retourne la liste d'œuvres en réserve (version light - sans photo)
+	 * @return
+	 */
+	public List<Art> readAllAvailable() {
+		List<Art> art_objects = new ArrayList<Art>();
+		Art art = null;
+		try {			
+			String requete = "SELECT * FROM " + TABLE + " JOIN art_status ON (art.ref_art_status = "
+					+ "art_status.id_art_status) WHERE art_status.name = 'En réserve'";
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art = rs.getInt(1);
