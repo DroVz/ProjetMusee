@@ -12,6 +12,7 @@ import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
 import dao.AuthorDAO;
 import dao.DoorDAO;
+import dao.FloorDAO;
 import dao.RoleDAO;
 import dao.RoomDAO;
 import dao.UserDAO;
@@ -35,6 +36,7 @@ import museum.ArtStatus;
 import museum.ArtType;
 import museum.Author;
 import museum.Door;
+import museum.Floor;
 import museum.Role;
 import museum.Room;
 import museum.User;
@@ -63,7 +65,8 @@ public class Main extends Application {
 	private ObservableList<ArtType> artTypeData = FXCollections.observableArrayList();
 	private ObservableList<ArtStatus> artStatusData = FXCollections.observableArrayList();
 	private ObservableList<Author> authorData = FXCollections.observableArrayList();
-	private ObservableList<Door> doorData = FXCollections.observableArrayList();	
+	private ObservableList<Door> doorData = FXCollections.observableArrayList();
+	private ObservableList<Door> floorData = FXCollections.observableArrayList();
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();
@@ -154,6 +157,15 @@ public class Main extends Application {
 		return doorData;
 	}
 	
+	public ObservableList<Floor> getFloorData() {
+		floorData = FXCollections.observableArrayList();
+		List<Floor> floors = FloorDAO.getInstance().readAll();
+		for (Floor floor : floors) {
+			floorData.add(floor);
+		}
+		return floorData;
+	}
+	
 	public ObservableList<Role> getRoleData() {
 		roleData = FXCollections.observableArrayList();
 		List<Role> roles = RoleDAO.getInstance().readAll();
@@ -198,6 +210,26 @@ public class Main extends Application {
 		Room room = RoomDAO.getInstance().read(id_room);
 		if (RoomDAO.getInstance().delete(room)) {
 			architectCtrl.notifyRoomSaved("La salle a été supprimée");
+		}
+	}
+	
+	public void addFloor(String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+		Floor floor = new Floor(name, dim_x, dim_y, dim_z, pos_x, pos_y);
+		if (FloorDAO.getInstance().create(floor)) {
+			architectCtrl.notifyFloorSaved("La salle a bien été enregistrée");
+		}		
+	}	
+	public void updateFloor(int id_floor, String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+		Floor floor = new Floor(id_floor, name, dim_x, dim_y, dim_z, pos_x, pos_y);
+		if (FloorDAO.getInstance().update(floor)) {
+			architectCtrl.notifyFloorSaved("La salle a été modifiée");
+		}		
+	}
+	
+	public void deleteFloor(int id_floor) {
+		Floor floor = FloorDAO.getInstance().read(id_floor);
+		if (FloorDAO.getInstance().delete(floor)) {
+			architectCtrl.notifyFloorSaved("La salle a été supprimée");
 		}
 	}
 	
