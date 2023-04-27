@@ -66,7 +66,7 @@ public class Main extends Application {
 	private ObservableList<ArtStatus> artStatusData = FXCollections.observableArrayList();
 	private ObservableList<Author> authorData = FXCollections.observableArrayList();
 	private ObservableList<Door> doorData = FXCollections.observableArrayList();
-	private ObservableList<Door> floorData = FXCollections.observableArrayList();
+	private ObservableList<Floor> floorData = FXCollections.observableArrayList();
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();
@@ -213,14 +213,14 @@ public class Main extends Application {
 		}
 	}
 	
-	public void addFloor(String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Floor floor = new Floor(name, dim_x, dim_y, dim_z, pos_x, pos_y);
+	/*public void addFloor(String name, int dim_x, int dim_y, int dim_z) {
+		Floor floor = new Floor(name, dim_x, dim_y, dim_z);
 		if (FloorDAO.getInstance().create(floor)) {
 			architectCtrl.notifyFloorSaved("La salle a bien été enregistrée");
 		}		
 	}	
-	public void updateFloor(int id_floor, String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Floor floor = new Floor(id_floor, name, dim_x, dim_y, dim_z, pos_x, pos_y);
+	public void updateFloor(int id_floor, String name, int dim_x, int dim_y, int dim_z) {
+		Floor floor = new Floor(id_floor, name, dim_x, dim_y, dim_z);
 		if (FloorDAO.getInstance().update(floor)) {
 			architectCtrl.notifyFloorSaved("La salle a été modifiée");
 		}		
@@ -231,7 +231,7 @@ public class Main extends Application {
 		if (FloorDAO.getInstance().delete(floor)) {
 			architectCtrl.notifyFloorSaved("La salle a été supprimée");
 		}
-	}
+	} */
 	
 	public void addArt(String art_code, String art_title, String creation_date, String materials, int dim_x,
 			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {

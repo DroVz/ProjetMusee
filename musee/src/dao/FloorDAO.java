@@ -17,8 +17,6 @@ public class FloorDAO extends DAO<Floor> {
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
-	private static final String POSX = "pos_x";
-	private static final String POSY = "pos_y";	
 	
 	private static FloorDAO instance=null;
 
@@ -37,15 +35,12 @@ public class FloorDAO extends DAO<Floor> {
 	public boolean create(Floor floor) {
 		boolean success = true;
 		try {
-			String requete = "INSERT INTO "+TABLE+" ("+NAME+", "+DIMX+", "+DIMY+", "+DIMZ
-					+", "+POSX+", "+POSY+") VALUES (?, ?, ?, ?, ?, ?)";
+			String requete = "INSERT INTO "+TABLE+" ("+NAME+", "+DIMX+", "+DIMY+", "+DIMZ+") VALUES (?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getName());
 			pst.setInt(3, floor.getDim_x());
 			pst.setInt(4, floor.getDim_y());
 			pst.setInt(5, floor.getDim_z());
-			pst.setInt(6, floor.getPos_x());
-			pst.setInt(7, floor.getPos_y());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -83,15 +78,13 @@ public class FloorDAO extends DAO<Floor> {
 		boolean success = true;
 		try {
 			String requete = "UPDATE "+TABLE+" SET "+NAME+"= ?, "+DIMX+"= ?,"+DIMY+"= ?,"+DIMZ
-					+"= ?,"+POSX+"= ?,"+POSY+"= ? WHERE "+PK+"= ?";
+					+"= ?= ? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getName());
-			pst.setInt(3, floor.getDim_x());
-			pst.setInt(4, floor.getDim_y());
-			pst.setInt(5, floor.getDim_z());
-			pst.setInt(6, floor.getPos_x());
-			pst.setInt(7, floor.getPos_y());
-			pst.setInt(8, floor.getId_floor());
+			pst.setInt(2, floor.getDim_x());
+			pst.setInt(3, floor.getDim_y());
+			pst.setInt(4, floor.getDim_z());
+			pst.setInt(5, floor.getId_floor());
 			pst.executeUpdate();
 			data.put(floor.getId_floor(), floor);
 		} catch (SQLException e) {
@@ -116,9 +109,7 @@ public class FloorDAO extends DAO<Floor> {
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
-				int pos_x = rs.getInt(POSX);
-				int pos_y = rs.getInt(POSY);
-				floor = new Floor(id, nom, dim_x, dim_y, dim_z, pos_x, pos_y);
+				floor = new Floor(id, nom, dim_x, dim_y, dim_z);
 				data.put(id, floor);
 			} catch (SQLException e) {
 				e.printStackTrace();

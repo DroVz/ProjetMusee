@@ -193,7 +193,7 @@ public class ArchitectControl {
 		roomTable.getSelectionModel().selectFirst();
 	}
 	
-	
+
 	
 	/*  ---------------------------
 	 * 
