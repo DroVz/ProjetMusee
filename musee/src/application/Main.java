@@ -268,9 +268,8 @@ public class Main extends Application {
 			loader.setController(this);
 			mainWindowRoot = (BorderPane)loader.load();
 			// affichage de la fenêtre principale
-			double height = Screen.getPrimary().getBounds().getHeight();   
-			double width = Screen.getPrimary().getBounds().getWidth();   
-			Scene scene = new Scene(mainWindowRoot, width, height);
+			Scene scene = new Scene(mainWindowRoot);
+			mainWindow.setMaximized(true);
 			mainWindow.setScene(scene);
 			mainWindow.show();
 		} catch (IOException e) {

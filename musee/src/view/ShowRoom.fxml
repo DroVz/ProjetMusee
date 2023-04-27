@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ShowRoomControl">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ShowRoomControl">
    <children>
       <TableView fx:id="zoneTableView" layoutX="834.0" layoutY="100.0" onMouseClicked="#handleSelectZoneItem" prefHeight="217.0" prefWidth="253.0">
         <columns>
@@ -106,19 +106,19 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="1219.0" layoutY="58.0" prefHeight="35.0" prefWidth="286.0" text="Création d'emplacement :" textFill="#284b63">
+      <Label layoutX="1219.0" layoutY="58.0" prefHeight="35.0" prefWidth="286.0" text="Placement d'une Oeuvre :" textFill="#284b63" AnchorPane.leftAnchor="1219.0" AnchorPane.rightAnchor="415.0">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TreeView fx:id="globalTreeView" layoutX="1578.0" layoutY="88.0" prefHeight="842.0" prefWidth="253.0" />
-      <Label layoutX="1578.0" layoutY="58.0" prefHeight="35.0" prefWidth="224.0" text="Organisation des salles :" textFill="#284b63">
+      <TreeView fx:id="globalTreeView" layoutX="1568.0" layoutY="86.0" prefHeight="842.0" prefWidth="253.0" />
+      <Label layoutX="1578.0" layoutY="58.0" prefHeight="35.0" prefWidth="224.0" text="Organisation des salles :" textFill="#284b63" AnchorPane.leftAnchor="1578.0" AnchorPane.rightAnchor="89.0">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
       <AnchorPane fx:id="drawSection" layoutX="18.0" layoutY="100.0" prefHeight="972.0" prefWidth="778.0" style="-fx-background-color: #FFFFFF;" />
-      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Page Architect" textFill="WHITE">
+      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" onAction="#handleShowCuratorPane" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Gestion des oeuvres" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>

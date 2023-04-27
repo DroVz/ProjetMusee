@@ -149,6 +149,7 @@ public class ShowRoomControl {
 	private void handleCreateZone(ActionEvent event) {
 		zoneAnchorPane.setDisable(false);
 	}
+	
 	@FXML
 	private void handleDeleteZone(ActionEvent event) {
 		
@@ -159,6 +160,7 @@ public class ShowRoomControl {
 		
 		this.refreshWindow();
 	}
+	
 	@FXML
 	private void handleConfirmZone(ActionEvent event) {
 		this.addZone();
@@ -166,6 +168,7 @@ public class ShowRoomControl {
 		this.resetZoneTextField();
 		zoneAnchorPane.setDisable(true);
 	}
+	
 	@FXML
 	private void handleCancelZone(ActionEvent event) {
 		this.resetZoneTextField();
@@ -179,6 +182,7 @@ public class ShowRoomControl {
 		inputPosXZone.setText("");
 		inputPosYZone.setText("");
 	}
+	
 	private void setZoneError() {
 		inputDimXZone.setText("Erreur");
 		inputDimYZone.setText("Erreur");
@@ -190,6 +194,7 @@ public class ShowRoomControl {
 	private void handleCreateSpot(ActionEvent event) {
 	spotAnchorPane.setDisable(false);
 	}
+	
 	@FXML
 	private void handleDeleteSpot(ActionEvent event) {
 		SpotControl spotControl = SpotControl.getInstance();
@@ -200,6 +205,7 @@ public class ShowRoomControl {
 		
 		this.refreshWindow();
 	}
+	
 	@FXML
 	private void handleConfirmSpot(ActionEvent event) {
 		this.addSpot();
@@ -207,11 +213,13 @@ public class ShowRoomControl {
 		this.resetSpotTextField();
 		spotAnchorPane.setDisable(true);
 	}
+	
 	@FXML
 	private void handleCancelSpot(ActionEvent event) {
 		this.resetSpotTextField();
 		spotAnchorPane.setDisable(true);
 	}
+	
 	private void resetSpotTextField() {
 		inputNameSpot.setText("");
 		inputDimXSpot.setText("");
@@ -221,22 +229,40 @@ public class ShowRoomControl {
 		inputPosYSpot.setText("");
 		inputPosZSpot.setText("");
 	}
+	
 	private void setSpotError() {
 		inputDimXSpot.setText("Erreur");
 		inputDimYSpot.setText("Erreur");
 		inputPosXSpot.setText("Erreur");
 		inputPosYSpot.setText("Erreur");
 	}
+	
+	@FXML
+	private void handleShowCuratorPane() {
+		mainControler.showCuratorPane();
+	}
+	
 	//Clicked Actions 
 	@FXML 
 	private void handleSelectZoneItem(MouseEvent event) {
 		selectedZoneLine = zoneTableView.getSelectionModel().getSelectedIndex();
 	}
+	
 	@FXML 
 	private void handleSelectSpotItem(MouseEvent event) {
 		selectedSpotLine = spotTableView.getSelectionModel().getSelectedIndex();
 	}
 	
+	@FXML 
+	private void handleSetInputOfArt(MouseEvent event) {
+		if (artChoiceBox.getValue() != null) {
+			Art art = artChoiceBox.getValue();
+			inputNameSpot.setText(art.getArt_title());
+			inputDimXSpot.setText(art.getDim_x() + "");
+			inputDimYSpot.setText(art.getDim_y() + "");
+			inputDimZSpot.setText(art.getDim_z() + "");
+		}
+	}
 	
 	
 	// private sub and function 
