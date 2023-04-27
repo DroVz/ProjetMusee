@@ -1,9 +1,10 @@
-package controller;
+package controllerModel;
 
 import java.util.List;
 
 import dao.SpotDAO;
 import museum.Spot;
+import museum.Zone;
 
 
 public class SpotControl {
@@ -30,6 +31,13 @@ public class SpotControl {
 
 	public List<Spot> readAll() {
 		return SpotDAO.getInstance().readAll();
+	}
+	public void deleteSpotOf(Zone zone) {
+		for (Spot spot : SpotDAO.getInstance().readAll()) {
+			if(spot.getZone().getId() == zone.getId()) {
+				SpotDAO.getInstance().delete(spot);
+			}
+		}
 	}
 
 }

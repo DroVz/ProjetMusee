@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 
 import application.Main;
+import controllerView.CuratorControl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

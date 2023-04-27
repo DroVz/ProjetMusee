@@ -1,8 +1,9 @@
-package controller;
+package controllerModel;
 
 import java.util.List;
 
 import dao.ZoneDAO;
+import museum.Area;
 import museum.Zone;
 
 public class ZoneControl {
