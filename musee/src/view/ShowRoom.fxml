@@ -118,7 +118,7 @@
          </font>
       </Label>
       <AnchorPane fx:id="drawSection" layoutX="18.0" layoutY="100.0" prefHeight="972.0" prefWidth="778.0" style="-fx-background-color: #FFFFFF;" />
-      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" onAction="#switchToArchitect" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Page Architect" textFill="WHITE">
+      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Page Architect" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
