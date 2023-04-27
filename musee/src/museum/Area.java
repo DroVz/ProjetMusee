@@ -92,6 +92,7 @@ public abstract class Area {
 			}
 		}
 		
+		System.out.println("Overlaps : " + pointInside);
 		return pointInside;
 	}
 	

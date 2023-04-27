@@ -62,12 +62,7 @@ public class Zone extends Area {
 	}
 
 	public boolean insideParent() {
-		int numberOfPointInside = 0;
-		for(Point point : this.getPoints()) {
-			if (this.room.checkPoint(point)) {
-				numberOfPointInside ++;
-			}
-		}
-		return numberOfPointInside == this.getPoints().size() + 1;
+		return this.getPos_x() + this.getDim_x() <= this.getRoom().getDim_x() 
+				&& this.getPos_y() + this.getDim_y() <= this.getRoom().getDim_y();
 	}
 }

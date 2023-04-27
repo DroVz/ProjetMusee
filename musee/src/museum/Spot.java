@@ -78,13 +78,8 @@ public class Spot extends Area {
 	}
 	
 	public boolean insideParent() {
-		int numberOfPointInside = 0;
-		for(Point point : this.getPoints()) {
-			if (this.zone.checkPoint(point)) {
-				numberOfPointInside ++;
-			}
-		}
-		return numberOfPointInside == this.getPoints().size() + 1;
+		return this.getPos_x() + this.getDim_x() <= this.getZone().getDim_x() 
+				&& this.getPos_y() + this.getDim_y() <= this.getZone().getDim_y();
 	}
 	
 }

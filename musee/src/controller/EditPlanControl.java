@@ -31,7 +31,7 @@ public class EditPlanControl {
 		pane.setLayoutY(room.getPos_y());
 		pane.setPrefWidth(room.getDim_x());
 		pane.setPrefHeight(room.getDim_y());
-		pane.setStyle("-fx-background-color: "+ ColorControl.getInstance().getHexColor());
+		pane.setStyle("-fx-background-color: #F3FBFF; -fx-border-color: #284b63 ");
 		
 		this.panesOfRooms.add(pane);
 		anchorPane.getChildren().add(pane);
@@ -45,8 +45,8 @@ public class EditPlanControl {
 		pane.setLayoutY(zone.getPos_y());
 		pane.setPrefWidth(zone.getDim_x());
 		pane.setPrefHeight(zone.getDim_y());
-		pane.setStyle("-fx-background-color: "+ ColorControl.getInstance().getHexColor());
-		
+		pane.setStyle("-fx-background-color: #C3DDEE");
+		// ; -fx-border-color: #284b63 
 		this.panesOfZones.add(pane);
 		parentPane.getChildren().add(pane);
 	}
@@ -59,8 +59,8 @@ public class EditPlanControl {
 		pane.setLayoutY(spot.getPos_y());
 		pane.setPrefWidth(spot.getDim_x());
 		pane.setPrefHeight(spot.getDim_y());
-		pane.setStyle("-fx-background-color: "+ ColorControl.getInstance().getHexColor());
-		
+		pane.setStyle("-fx-background-color: #3c6e71");
+		// ; -fx-border-color: #D6FAFC 
 		this.panesOfSpots.add(pane);
 		parentPane.getChildren().add(pane);
 	}

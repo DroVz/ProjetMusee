@@ -30,5 +30,7 @@ public class ColorControl {
 		return this.character[new Random().nextInt(this.character.length)];
 	}
 	
-
+// #284b63 C3DDEE
+// #3c6e71 D6FAFC
+// #FFFFFF
 }

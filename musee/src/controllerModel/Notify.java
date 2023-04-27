@@ -4,6 +4,8 @@ import application.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -54,8 +56,13 @@ public class Notify {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage() + " : Notify Error -> ShowNotif");
 		}
-		
-
 	}
 	
+	public void showAlerte(String title, String header, String message) {
+		Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+	}
 }

@@ -56,11 +56,7 @@ public class ShowRoomControl {
 	private AnchorPane spotAnchorPane;
 	@FXML
 	private AnchorPane drawSection;
-	
-	// Anchor Pane State 
-	private boolean stateOfZoneAnchorPane = false;
-	private boolean stateOfSpotAnchorPane = false;
-	
+
 	// TextField 
 	@FXML 
 	private TextField inputNameZone;
@@ -260,6 +256,7 @@ public class ShowRoomControl {
 			} else {
 				this.resetZoneTextField();
 				this.setZoneError();
+				Notify.GetInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de la zone est incorecte !");
 			}
 		}
 		catch (NumberFormatException numberException) {
@@ -282,12 +279,13 @@ public class ShowRoomControl {
 		Spot spot = new Spot(spotName,spotDimX,spotDimY,spotDimZ, spotPosX, spotPosY, spotPosZ, zone, art);
 		 
 		List<Area> checkArea = new ArrayList<Area>(SpotControl.getInstance().readAll());
+		System.out.println(spot.getZone().getPos_x() + " : " + spot.getZone().getPos_x() + " : " + spot.getZone().getDim_x() + " : " + spot.getZone().getDim_y());
 		if (!spot.overlaps(checkArea) && spot.insideParent()) {
 			SpotControl.getInstance().createSpot(spot);
 		} else {
 			this.resetSpotTextField();
 			this.setSpotError();
-			Notify.GetInstance().showNotif("Erreur emplacement", "Le dimension ou le positionnement de l'emplacement est incorecte !");
+			Notify.GetInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de l'emplacement est incorecte !");
 		}
 	}
 	
