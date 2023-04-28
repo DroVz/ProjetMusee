@@ -26,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -481,12 +482,21 @@ public class CuratorControl {
 	}
 	
 	/**
-	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleArtTableAction(MouseEvent event) {
 		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
 		showArtInfo();		
+	}
+	
+	/**
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleArtTableKeyPressed(KeyEvent event) {
+		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
+		showArtInfo();	
 	}
 	
 	/**

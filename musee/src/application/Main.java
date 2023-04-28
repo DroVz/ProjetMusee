@@ -138,12 +138,12 @@ public class Main extends Application {
 	}
 	
 	public ObservableList<Art> getAvailableArtData() {
-		artData = FXCollections.observableArrayList();
+		availableArtData = FXCollections.observableArrayList();
 		List<Art> arts = ArtDAO.getInstance().readAllAvailable();
 		for (Art art : arts) {
-			artData.add(art);
+			availableArtData.add(art);
 		}
-		return artData;
+		return availableArtData;
 	}
 	
 	public ObservableList<Author> getAuthorData() {

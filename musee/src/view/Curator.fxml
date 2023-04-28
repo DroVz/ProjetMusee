@@ -13,7 +13,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.CuratorControl">
    <children>
       <Label layoutX="14.0" layoutY="29.0" prefHeight="18.0" prefWidth="160.0" text="Oeuvres" />
-      <TableView fx:id="artTable" layoutX="14.0" layoutY="65.0" onMouseClicked="#handleArtTableAction" prefHeight="494.0" prefWidth="480.0">
+      <TableView fx:id="artTable" layoutX="14.0" layoutY="65.0" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" prefHeight="494.0" prefWidth="480.0">
         <columns>
           <TableColumn fx:id="codeColumn" prefWidth="94.39999103546143" text="Code" />
           <TableColumn fx:id="nameColumn" prefWidth="168.00001525878906" text="Titre" />
