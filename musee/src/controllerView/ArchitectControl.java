@@ -294,5 +294,5 @@ public class ArchitectControl {
 	@FXML
 	private void handleRoomTableAction(MouseEvent event) {
 		selectedRoomLine = roomTable.getSelectionModel().getSelectedIndex();
-	}
+	}	
 }

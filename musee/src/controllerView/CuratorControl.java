@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import application.Main;
 import controller.AuthorSelectControl;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -83,6 +85,8 @@ public class CuratorControl {
 	@FXML
 	private ComboBox<Author> cbbAuthor;
 	@FXML
+	private ComboBox<String> cbbOwner;
+	@FXML
 	private ImageView imgArt;
 	@FXML
 	private Label lblArtCreatEditTitle;
@@ -104,6 +108,8 @@ public class CuratorControl {
 	private Label lblAuthor;
 	@FXML
 	private Label lblArtType;
+	@FXML
+	private Label lblArtOwner;
 	@FXML
 	private Label lblArtStatus;
 	@FXML
@@ -178,6 +184,9 @@ public class CuratorControl {
 		artTable.setItems(mainController.getArtData());
 		cbbArtType.setItems(mainController.getArtTypeData());
 		cbbAuthor.setItems(mainController.getAuthorData());
+		cbbOwner.setItems(FXCollections.observableArrayList(
+			    new String("Oui"),
+			    new String("Non")));
 	}
 		
 	/**
@@ -243,6 +252,7 @@ public class CuratorControl {
 			}
 			lblAuthor.setText(fullName);
 			lblArtType.setText(selectedArt.getArt_type().getName());
+			lblArtOwner.setText(selectedArt.isOwner() ? "Oui" : "Non");
 			lblArtStatus.setText(selectedArt.getArt_status().getName());			
 			// affiche l'illustration de cette oeuvre si elle existe
 			if (selectedArt.getImage() != null) {
@@ -289,8 +299,9 @@ public class CuratorControl {
 			byte[] artImage = imageToByteArray(this.file);
 			Author author = cbbAuthor.getValue();
 			ArtType artType = cbbArtType.getValue();
+			boolean artOwner = (cbbOwner.getValue() == "Oui" ? true : false);
 			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
-					artImage, author, null, artType);
+					artImage, author, null, artType, artOwner);
 		} catch (Exception e) {
 			mainController.notifyFail("Un problème est survenu !");
 		}
@@ -310,6 +321,7 @@ public class CuratorControl {
 			Author author = cbbAuthor.getValue();
 			ArtStatus artStatus = selectedArt.getArt_status();
 			ArtType artType = cbbArtType.getValue();
+			boolean artOwner = (cbbOwner.getValue() == "Oui" ? true : false);
 			byte[] artImage = null;
 			if (this.file != null) {
 				artImage = imageToByteArray(this.file);
@@ -317,7 +329,7 @@ public class CuratorControl {
 				artImage = selectedArt.getImage();
 			}
 			mainController.updateArt(id_art, artCode, artTitle, artDates, artMaterials, artDimX,
-				artDimY, artDimZ, artImage, author, artStatus, artType);			
+				artDimY, artDimZ, artImage, author, artStatus, artType, artOwner);			
 		} catch (Exception e) {
 			mainController.notifyFail("Échec de l'enregistrement");
 		}
@@ -408,6 +420,7 @@ public class CuratorControl {
 				txtDimZ.setText(selectedArt.getDim_z()+"");
 				cbbAuthor.setValue(selectedArt.getAuthor());
 				cbbArtType.setValue(selectedArt.getArt_type());
+				cbbOwner.setValue(selectedArt.isOwner() ? "Oui" : "Non");
 				showArtEditingPane();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -469,12 +482,21 @@ public class CuratorControl {
 	}
 	
 	/**
-	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleArtTableAction(MouseEvent event) {
 		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
 		showArtInfo();		
+	}
+	
+	/**
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleArtTableKeyPressed(KeyEvent event) {
+		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
+		showArtInfo();	
 	}
 	
 	/**
