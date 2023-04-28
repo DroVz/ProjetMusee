@@ -128,6 +128,7 @@ public class ShowRoomControl {
 	public void setMainControl(Main mainControler) {
 		this.mainControler = mainControler;
 	}
+	
 	@FXML 
 	private void initialize() {
 		// Initialisation des éléments FXML
@@ -140,6 +141,7 @@ public class ShowRoomControl {
 		
 		// Chargement du plan 2D
 		this.editPlanControl = new EditPlanControl(this.drawSection);
+		this.editPlanControl.setRatioFitPage(RoomControl.getInstance().readAll());
 		this.initializePlan();
 		
 	}
@@ -149,6 +151,7 @@ public class ShowRoomControl {
 	private void handleCreateZone(ActionEvent event) {
 		zoneAnchorPane.setDisable(false);
 	}
+	
 	@FXML
 	private void handleDeleteZone(ActionEvent event) {
 		
@@ -159,6 +162,7 @@ public class ShowRoomControl {
 		
 		this.refreshWindow();
 	}
+	
 	@FXML
 	private void handleConfirmZone(ActionEvent event) {
 		this.addZone();
@@ -166,30 +170,18 @@ public class ShowRoomControl {
 		this.resetZoneTextField();
 		zoneAnchorPane.setDisable(true);
 	}
+	
 	@FXML
 	private void handleCancelZone(ActionEvent event) {
 		this.resetZoneTextField();
 		zoneAnchorPane.setDisable(true);
 	}
-	
-	private void resetZoneTextField() {
-		inputNameZone.setText("");
-		inputDimXZone.setText("");
-		inputDimYZone.setText("");
-		inputPosXZone.setText("");
-		inputPosYZone.setText("");
-	}
-	private void setZoneError() {
-		inputDimXZone.setText("Erreur");
-		inputDimYZone.setText("Erreur");
-		inputPosXZone.setText("Erreur");
-		inputPosYZone.setText("Erreur");
-	}
-	
+
 	@FXML
 	private void handleCreateSpot(ActionEvent event) {
 	spotAnchorPane.setDisable(false);
 	}
+	
 	@FXML
 	private void handleDeleteSpot(ActionEvent event) {
 		SpotControl spotControl = SpotControl.getInstance();
@@ -200,6 +192,7 @@ public class ShowRoomControl {
 		
 		this.refreshWindow();
 	}
+	
 	@FXML
 	private void handleConfirmSpot(ActionEvent event) {
 		this.addSpot();
@@ -207,11 +200,66 @@ public class ShowRoomControl {
 		this.resetSpotTextField();
 		spotAnchorPane.setDisable(true);
 	}
+	
 	@FXML
 	private void handleCancelSpot(ActionEvent event) {
 		this.resetSpotTextField();
 		spotAnchorPane.setDisable(true);
 	}
+	
+	@FXML
+	private void handleShowCuratorPane() {
+		mainControler.showCuratorPane();
+	}
+	
+	//Clicked Actions 
+	@FXML 
+	private void handleSelectZoneItem(MouseEvent event) {
+		selectedZoneLine = zoneTableView.getSelectionModel().getSelectedIndex();
+	}
+	
+	@FXML 
+	private void handleSelectSpotItem(MouseEvent event) {
+		selectedSpotLine = spotTableView.getSelectionModel().getSelectedIndex();
+	}
+	
+	@FXML 
+	private void handleSetInputOfArt(ActionEvent event) {
+		// L'évent onAction est pas écrit dans sceneBuilder.
+		if (artChoiceBox.getValue() != null) {
+			Art art = artChoiceBox.getValue();
+			inputNameSpot.setText(art.getArt_title());
+			inputDimXSpot.setText(art.getDim_x() + "");
+			inputDimYSpot.setText(art.getDim_y() + "");
+			inputDimZSpot.setText(art.getDim_z() + "");
+		}
+	}
+	
+	/**
+	 * Supprime le texte des composants spot TextField 
+	 */
+	private void resetZoneTextField() {
+		inputNameZone.setText("");
+		inputDimXZone.setText("");
+		inputDimYZone.setText("");
+		inputPosXZone.setText("");
+		inputPosYZone.setText("");
+	}
+	
+	/**
+	 * Modification de certains composant zone TextField
+	 */
+	private void setZoneError() {
+		inputDimXZone.setText("Erreur");
+		inputDimYZone.setText("Erreur");
+		inputPosXZone.setText("Erreur");
+		inputPosYZone.setText("Erreur");
+	}
+	
+	
+	/**
+	 * Supprime le texte des composants spot TextField 
+	 */
 	private void resetSpotTextField() {
 		inputNameSpot.setText("");
 		inputDimXSpot.setText("");
@@ -221,25 +269,21 @@ public class ShowRoomControl {
 		inputPosYSpot.setText("");
 		inputPosZSpot.setText("");
 	}
+	
+	/**
+	 * Modification de certains composant spot TextField
+	 */
 	private void setSpotError() {
 		inputDimXSpot.setText("Erreur");
 		inputDimYSpot.setText("Erreur");
 		inputPosXSpot.setText("Erreur");
 		inputPosYSpot.setText("Erreur");
 	}
-	//Clicked Actions 
-	@FXML 
-	private void handleSelectZoneItem(MouseEvent event) {
-		selectedZoneLine = zoneTableView.getSelectionModel().getSelectedIndex();
-	}
-	@FXML 
-	private void handleSelectSpotItem(MouseEvent event) {
-		selectedSpotLine = spotTableView.getSelectionModel().getSelectedIndex();
-	}
 	
 	
-	
-	// private sub and function 
+	/**
+	 * Ajoute une zone dans une room
+	 */
 	private void addZone() {
 		try {
 			String zoneName = inputNameZone.getText();
@@ -264,6 +308,9 @@ public class ShowRoomControl {
 		} 
 	}
 	
+	/**
+	 * Ajoute un spot dans une zone 
+	 */
 	private void addSpot() {
 		
 		String spotName = inputNameSpot.getText();
@@ -289,30 +336,48 @@ public class ShowRoomControl {
 		}
 	}
 	
-	// Initialisation des éléments 
+	/**
+	 * Initialisation du composant zone TableView 
+	 */
 	private void initializeZoneTableView() {
 			this.zoneTableView.getItems().setAll(ZoneControl.getInstance().readAll());
 			idZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 			nameZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
+	
+	/**
+	 * Initialisation du composant spot TableView 
+	 */
 	private void initializeSpotTableView() {
 		this.spotTableView.getItems().setAll(SpotControl.getInstance().readAll());
 		idSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 		nameSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
-}
+	}
 	
+	/**
+	 * Initialisation du composant room ChoiceBox 
+	 */
 	private void initializeRoomChoiceBox() {
 		roomChoiceBox.getItems().setAll(RoomControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant zone ChoiceBox 
+	 */
 	private void initializeZoneChoiceBox() {
 		zoneChoiceBox.getItems().setAll(ZoneControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant art ChoiceBox 
+	 */
 	private void initializeArtChoiceBox() {
 		artChoiceBox.getItems().setAll(ArtControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant TreeView
+	 */
 	private void initializeTreeView() {
 		// Récupère les éléments du musée 
 		List<Room> rooms = RoomControl.getInstance().readAll();
@@ -357,12 +422,18 @@ public class ShowRoomControl {
 		globalTreeView.setRoot(globalItem);
 	}
 	
+	/**
+	 * Initialisation du plan 2D
+	 */
 	private void initializePlan() {
 		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
 		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
 		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Actualise les éléments visuels de ShowRoom.FXML
+	 */
 	private void refreshWindow() {
 		this.initializeZoneTableView();
 		this.initializeSpotTableView();

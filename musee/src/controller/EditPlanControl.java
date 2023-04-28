@@ -6,13 +6,14 @@ import java.util.List;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import museum.Floor;
+import museum.Point;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;
 
 public class EditPlanControl {
-	
 	private AnchorPane drawSection;
+	private double ratio = 1;
 	
 	private List<Pane> panesOfFloors = new ArrayList<Pane>();
 	private List<Pane> panesOfRooms = new ArrayList<Pane>();
@@ -22,7 +23,7 @@ public class EditPlanControl {
 	public EditPlanControl(AnchorPane drawSection) {
 		this.drawSection = drawSection;
 	}
-	
+
 	public void drawFloorOn(Floor floor) {
 		
 		// Création du pane 
@@ -35,18 +36,21 @@ public class EditPlanControl {
 		this.panesOfFloors.add(pane);
 		this.drawSection.getChildren().add(pane);
 	}
-	
-	
-	
+
+	/**
+	 * 
+	 * @param room 
+	 * @param anchorPane 
+	 */
 	private void DrawRoomOn(Room room, AnchorPane anchorPane) {
 		
 		// Création du pane 
 		Pane pane = new Pane();
 		pane.setId(room.getName());
-		pane.setLayoutX(room.getPos_x());
-		pane.setLayoutY(room.getPos_y());
-		pane.setPrefWidth(room.getDim_x());
-		pane.setPrefHeight(room.getDim_y());
+		pane.setLayoutX(room.getPos_x()*this.ratio);
+		pane.setLayoutY(room.getPos_y()*this.ratio);
+		pane.setPrefWidth(room.getDim_x() * this.ratio);
+		pane.setPrefHeight(room.getDim_y() * this.ratio);
 		pane.setStyle("-fx-background-color: #F3FBFF; -fx-border-color: #284b63 ");
 		
 		this.panesOfRooms.add(pane);
@@ -59,8 +63,8 @@ public class EditPlanControl {
 		pane.setId(zone.getName());
 		pane.setLayoutX(zone.getPos_x());
 		pane.setLayoutY(zone.getPos_y());
-		pane.setPrefWidth(zone.getDim_x());
-		pane.setPrefHeight(zone.getDim_y());
+		pane.setPrefWidth(zone.getDim_x() * this.ratio);
+		pane.setPrefHeight(zone.getDim_y() * this.ratio);
 		pane.setStyle("-fx-background-color: #C3DDEE");
 		// ; -fx-border-color: #284b63 
 		this.panesOfZones.add(pane);
@@ -73,8 +77,8 @@ public class EditPlanControl {
 		pane.setId(spot.getName());
 		pane.setLayoutX(spot.getPos_x());
 		pane.setLayoutY(spot.getPos_y());
-		pane.setPrefWidth(spot.getDim_x());
-		pane.setPrefHeight(spot.getDim_y());
+		pane.setPrefWidth(spot.getDim_x() * this.ratio);
+		pane.setPrefHeight(spot.getDim_y() * this.ratio);
 		pane.setStyle("-fx-background-color: #3c6e71");
 		// ; -fx-border-color: #D6FAFC 
 		this.panesOfSpots.add(pane);
@@ -124,5 +128,18 @@ public class EditPlanControl {
 		this.panesOfSpots.clear();
 	}
 	
+	public void setRatioFitPage(List<Room> rooms) {
+		boolean ratioIsGreat = false;
+		
+		while (!ratioIsGreat) {
+			ratioIsGreat = true;
+			for(Room room : rooms) {
+				if(!room.insidePane((int)this.drawSection.getPrefWidth(), (int)this.drawSection.getPrefHeight(),this.ratio)) {
+					ratioIsGreat = false;
+				}
+			}
+			if (ratioIsGreat == false ) {this.ratio -= 0.1;}
+		}
+	}
 
 }

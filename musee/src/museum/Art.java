@@ -13,6 +13,7 @@ public class Art {
 	private Author author;
 	private ArtStatus art_status;
 	private ArtType art_type;
+	private boolean owner;
 	
 	/**
 	 * constructor for Art if id_art is known
@@ -30,7 +31,8 @@ public class Art {
 	 * @param art_type
 	 */
 	public Art(int id_art, String art_code, String art_title, String creation_date, String materials,
-			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status,
+			ArtType art_type, boolean owner) {
 		this.id_art = id_art;
 		this.art_code = art_code;
 		this.art_title = art_title;
@@ -43,6 +45,7 @@ public class Art {
 		this.author = author;
 		this.art_status = art_status;
 		this.art_type = art_type;
+		this.owner = owner;
 	}
 	
 	/**
@@ -60,7 +63,8 @@ public class Art {
 	 * @param art_type
 	 */
 	public Art(String art_code, String art_title, String creation_date, String materials,
-			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
+			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status,
+			ArtType art_type, boolean owner) {
 		this.art_code = art_code;
 		this.art_title = art_title;
 		this.creation_date = creation_date;
@@ -72,6 +76,7 @@ public class Art {
 		this.author = author;
 		this.art_status = art_status;
 		this.art_type = art_type;
+		this.owner = owner;
 	}
 
 	public int getId_art() {
@@ -124,6 +129,10 @@ public class Art {
 	
 	public ArtType getArt_type() {
 		return art_type;
+	}
+	
+	public boolean isOwner() {
+		return owner;
 	}
 	
 	@Override

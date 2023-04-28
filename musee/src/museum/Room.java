@@ -83,8 +83,15 @@ public class Room extends Area {
 		return this.name;
 	}
 	
+
 	public boolean insideParent() {
 		return this.getPos_x() + this.getDim_x() <= this.getFloor().getDim_x() 
 				&& this.getPos_y() + this.getDim_y() <= this.getFloor().getDim_y();
+    }
+
+	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
+		return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
+				&& (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;
+
 	}
 }

@@ -68,7 +68,7 @@
             <Insets />
          </opaqueInsets>
       </AnchorPane>
-      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
+      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0"  prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
          <children>
             <TextField fx:id="inputNameSpot" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Name" />
             <TextField fx:id="inputDimXSpot" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Largeur" />
@@ -94,7 +94,7 @@
             <Label layoutX="20.0" layoutY="286.0" prefHeight="17.0" prefWidth="65.0" text="Position z :" textFill="#284b63" />
             <Label layoutX="25.0" layoutY="25.0" prefHeight="17.0" prefWidth="50.0" text="Zone :" textFill="#284b63" />
             <ChoiceBox fx:id="zoneChoiceBox" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
-            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" prefWidth="150.0" onAction="#handleSetInputOfArt" style="-fx-background-color: #3c6e71;" />
             <Label layoutX="20.0" layoutY="59.0" prefHeight="17.0" prefWidth="50.0" text="Oeuvre :" textFill="#284b63" />
          </children>
          <opaqueInsets>
@@ -106,19 +106,19 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="1219.0" layoutY="58.0" prefHeight="35.0" prefWidth="286.0" text="Création d'emplacement :" textFill="#284b63">
+      <Label layoutX="1219.0" layoutY="58.0" prefHeight="35.0" prefWidth="286.0" text="Placement d'une Oeuvre :" textFill="#284b63" AnchorPane.leftAnchor="1219.0" AnchorPane.rightAnchor="415.0">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TreeView fx:id="globalTreeView" layoutX="1578.0" layoutY="88.0" prefHeight="842.0" prefWidth="253.0" />
-      <Label layoutX="1578.0" layoutY="58.0" prefHeight="35.0" prefWidth="224.0" text="Organisation des salles :" textFill="#284b63">
+      <TreeView fx:id="globalTreeView" layoutX="1568.0" layoutY="86.0" prefHeight="842.0" prefWidth="253.0" />
+      <Label layoutX="1578.0" layoutY="58.0" prefHeight="35.0" prefWidth="224.0" text="Organisation des salles :" textFill="#284b63" AnchorPane.leftAnchor="1578.0" AnchorPane.rightAnchor="89.0">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
       <AnchorPane fx:id="drawSection" layoutX="18.0" layoutY="100.0" prefHeight="972.0" prefWidth="778.0" style="-fx-background-color: #FFFFFF;" />
-      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Page Architect" textFill="WHITE">
+      <Button layoutX="1067.0" layoutY="866.0" mnemonicParsing="false" onAction="#handleShowCuratorPane" prefHeight="25.0" prefWidth="165.0" style="-fx-background-color: #3c6e71;" text="Gestion des oeuvres" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
