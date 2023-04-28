@@ -68,7 +68,7 @@
             <Insets />
          </opaqueInsets>
       </AnchorPane>
-      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0" onMouseMoved="#handleSetInputOfArt" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
+      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0"  prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
          <children>
             <TextField fx:id="inputNameSpot" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Name" />
             <TextField fx:id="inputDimXSpot" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Largeur" />
@@ -94,7 +94,7 @@
             <Label layoutX="20.0" layoutY="286.0" prefHeight="17.0" prefWidth="65.0" text="Position z :" textFill="#284b63" />
             <Label layoutX="25.0" layoutY="25.0" prefHeight="17.0" prefWidth="50.0" text="Zone :" textFill="#284b63" />
             <ChoiceBox fx:id="zoneChoiceBox" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
-            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" prefWidth="150.0" onAction="#handleSetInputOfArt" style="-fx-background-color: #3c6e71;" />
             <Label layoutX="20.0" layoutY="59.0" prefHeight="17.0" prefWidth="50.0" text="Oeuvre :" textFill="#284b63" />
          </children>
          <opaqueInsets>

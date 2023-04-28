@@ -224,7 +224,8 @@ public class ShowRoomControl {
 	}
 	
 	@FXML 
-	private void handleSetInputOfArt(MouseEvent event) {
+	private void handleSetInputOfArt(ActionEvent event) {
+		// L'évent onAction est pas écrit dans sceneBuilder.
 		if (artChoiceBox.getValue() != null) {
 			Art art = artChoiceBox.getValue();
 			inputNameSpot.setText(art.getArt_title());
