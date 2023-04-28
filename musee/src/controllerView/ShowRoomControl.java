@@ -128,6 +128,7 @@ public class ShowRoomControl {
 	public void setMainControl(Main mainControler) {
 		this.mainControler = mainControler;
 	}
+	
 	@FXML 
 	private void initialize() {
 		// Initialisation des éléments FXML
@@ -140,6 +141,7 @@ public class ShowRoomControl {
 		
 		// Chargement du plan 2D
 		this.editPlanControl = new EditPlanControl(this.drawSection);
+		this.editPlanControl.setRatioFitPage(RoomControl.getInstance().readAll());
 		this.initializePlan();
 		
 	}
@@ -174,22 +176,7 @@ public class ShowRoomControl {
 		this.resetZoneTextField();
 		zoneAnchorPane.setDisable(true);
 	}
-	
-	private void resetZoneTextField() {
-		inputNameZone.setText("");
-		inputDimXZone.setText("");
-		inputDimYZone.setText("");
-		inputPosXZone.setText("");
-		inputPosYZone.setText("");
-	}
-	
-	private void setZoneError() {
-		inputDimXZone.setText("Erreur");
-		inputDimYZone.setText("Erreur");
-		inputPosXZone.setText("Erreur");
-		inputPosYZone.setText("Erreur");
-	}
-	
+
 	@FXML
 	private void handleCreateSpot(ActionEvent event) {
 	spotAnchorPane.setDisable(false);
@@ -220,23 +207,6 @@ public class ShowRoomControl {
 		spotAnchorPane.setDisable(true);
 	}
 	
-	private void resetSpotTextField() {
-		inputNameSpot.setText("");
-		inputDimXSpot.setText("");
-		inputDimYSpot.setText("");
-		inputDimZSpot.setText("");
-		inputPosXSpot.setText("");
-		inputPosYSpot.setText("");
-		inputPosZSpot.setText("");
-	}
-	
-	private void setSpotError() {
-		inputDimXSpot.setText("Erreur");
-		inputDimYSpot.setText("Erreur");
-		inputPosXSpot.setText("Erreur");
-		inputPosYSpot.setText("Erreur");
-	}
-	
 	@FXML
 	private void handleShowCuratorPane() {
 		mainControler.showCuratorPane();
@@ -264,8 +234,55 @@ public class ShowRoomControl {
 		}
 	}
 	
+	/**
+	 * Supprime le texte des composants spot TextField 
+	 */
+	private void resetZoneTextField() {
+		inputNameZone.setText("");
+		inputDimXZone.setText("");
+		inputDimYZone.setText("");
+		inputPosXZone.setText("");
+		inputPosYZone.setText("");
+	}
 	
-	// private sub and function 
+	/**
+	 * Modification de certains composant zone TextField
+	 */
+	private void setZoneError() {
+		inputDimXZone.setText("Erreur");
+		inputDimYZone.setText("Erreur");
+		inputPosXZone.setText("Erreur");
+		inputPosYZone.setText("Erreur");
+	}
+	
+	
+	/**
+	 * Supprime le texte des composants spot TextField 
+	 */
+	private void resetSpotTextField() {
+		inputNameSpot.setText("");
+		inputDimXSpot.setText("");
+		inputDimYSpot.setText("");
+		inputDimZSpot.setText("");
+		inputPosXSpot.setText("");
+		inputPosYSpot.setText("");
+		inputPosZSpot.setText("");
+	}
+	
+	/**
+	 * Modification de certains composant spot TextField
+	 */
+	private void setSpotError() {
+		inputDimXSpot.setText("Erreur");
+		inputDimYSpot.setText("Erreur");
+		inputPosXSpot.setText("Erreur");
+		inputPosYSpot.setText("Erreur");
+	}
+	
+	
+	/**
+	 * Ajoute une zone dans une room
+	 */
 	private void addZone() {
 		try {
 			String zoneName = inputNameZone.getText();
@@ -290,6 +307,9 @@ public class ShowRoomControl {
 		} 
 	}
 	
+	/**
+	 * Ajoute un spot dans une zone 
+	 */
 	private void addSpot() {
 		
 		String spotName = inputNameSpot.getText();
@@ -315,30 +335,48 @@ public class ShowRoomControl {
 		}
 	}
 	
-	// Initialisation des éléments 
+	/**
+	 * Initialisation du composant zone TableView 
+	 */
 	private void initializeZoneTableView() {
 			this.zoneTableView.getItems().setAll(ZoneControl.getInstance().readAll());
 			idZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 			nameZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
+	
+	/**
+	 * Initialisation du composant spot TableView 
+	 */
 	private void initializeSpotTableView() {
 		this.spotTableView.getItems().setAll(SpotControl.getInstance().readAll());
 		idSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 		nameSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
-}
+	}
 	
+	/**
+	 * Initialisation du composant room ChoiceBox 
+	 */
 	private void initializeRoomChoiceBox() {
 		roomChoiceBox.getItems().setAll(RoomControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant zone ChoiceBox 
+	 */
 	private void initializeZoneChoiceBox() {
 		zoneChoiceBox.getItems().setAll(ZoneControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant art ChoiceBox 
+	 */
 	private void initializeArtChoiceBox() {
 		artChoiceBox.getItems().setAll(ArtControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Initialisation du composant TreeView
+	 */
 	private void initializeTreeView() {
 		// Récupère les éléments du musée 
 		List<Room> rooms = RoomControl.getInstance().readAll();
@@ -383,12 +421,18 @@ public class ShowRoomControl {
 		globalTreeView.setRoot(globalItem);
 	}
 	
+	/**
+	 * Initialisation du plan 2D
+	 */
 	private void initializePlan() {
 		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
 		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
 		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());
 	}
 	
+	/**
+	 * Actualise les éléments visuels de ShowRoom.FXML
+	 */
 	private void refreshWindow() {
 		this.initializeZoneTableView();
 		this.initializeSpotTableView();

@@ -68,7 +68,7 @@
             <Insets />
          </opaqueInsets>
       </AnchorPane>
-      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
+      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0" onMouseMoved="#handleSetInputOfArt" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
          <children>
             <TextField fx:id="inputNameSpot" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Name" />
             <TextField fx:id="inputDimXSpot" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Largeur" />
