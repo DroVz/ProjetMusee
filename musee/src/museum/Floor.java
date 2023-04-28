@@ -1,11 +1,14 @@
  package museum;
 
-public class Floor {
+import java.util.List;
+
+import controllerModel.FloorControl;
+
+public class Floor extends Area {
 	private int id_floor;
 	private String name;
-	private int dim_x;
-	private int dim_y;
 	private int dim_z;
+	private List<Room> rooms;
 	
 	/**
 	 * constructor for Floor if id_floor is known
@@ -16,11 +19,11 @@ public class Floor {
 	 * @param dim_z
 	 */
 	public Floor(int id_floor, String name, int dim_x, int dim_y, int dim_z) {
+		super(0, 0, dim_x, dim_y);
 		this.id_floor= id_floor;
 		this.name = name;
-		this.dim_x = dim_x;
-		this.dim_y = dim_y;
 		this.dim_z = dim_z;
+		this.rooms = FloorControl.getInstance().readRoomsBy(this);
 	}
 	
 	/**
@@ -31,14 +34,14 @@ public class Floor {
 	 * @param dim_z
 	 */
 	public Floor(String name, int dim_x, int dim_y, int dim_z) {
+		super(0, 0, dim_x, dim_y);
 		this.name = name;
-		this.dim_x = dim_x;
-		this.dim_y = dim_y;
 		this.dim_z = dim_z;
+		this.rooms = FloorControl.getInstance().readRoomsBy(this);
 	}
 
 	public int getId_floor() {
-		return id_floor;
+		return this.id_floor;
 	}
 	
 	public void setId_floor(int id_floor) {
@@ -46,25 +49,40 @@ public class Floor {
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public int getDim_x() {
-		return dim_x;
-	}
-
-	public int getDim_y() {
-		return dim_y;
+		return this.name;
 	}
 
 	public int getDim_z() {
-		return dim_z;
+		return this.dim_z;
+	}
+	
+	public void setDim_z(int Dim_Z) {
+		this.dim_z = Dim_Z ;
+	}
+	
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	
+	public void setRooms(List<Room> rooms) {
+		this.rooms = rooms;
+	}
+
 	@Override
 	public String toString() {
-		return "Room [id=" + id_floor + ", nom=" + name + ", dim_x=" + dim_x + ", dim_y=" + dim_y +
-				", dim_z=" + dim_z + "]";
+		return this.getName();
 	}
+	
+	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
+
+		 return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
+
+		 && (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;
+
+		 }
+	public List<Room> getRooms(){
+		return this.rooms;
+	}
+	
 }

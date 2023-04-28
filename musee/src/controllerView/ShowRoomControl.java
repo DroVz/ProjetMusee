@@ -256,7 +256,7 @@ public class ShowRoomControl {
 			} else {
 				this.resetZoneTextField();
 				this.setZoneError();
-				Notify.GetInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de la zone est incorecte !");
+				Notify.getInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de la zone est incorecte !");
 			}
 		}
 		catch (NumberFormatException numberException) {
@@ -285,7 +285,7 @@ public class ShowRoomControl {
 		} else {
 			this.resetSpotTextField();
 			this.setSpotError();
-			Notify.GetInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de l'emplacement est incorecte !");
+			Notify.getInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de l'emplacement est incorecte !");
 		}
 	}
 	

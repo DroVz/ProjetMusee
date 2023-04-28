@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import museum.Floor;
+import museum.Room;
 
 public class FloorDAO extends DAO<Floor> {
 	
 	private static final String TABLE = "floor";
 	private static final String PK = "id_floor";
-	private static final String NAME = "name";
+	private static final String NAME = "floor_name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
@@ -134,5 +135,26 @@ public class FloorDAO extends DAO<Floor> {
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return floors;		
+	}
+	
+	public List<Room> readRoomsBy(Floor floor){
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = null;
+		try {			
+			String requete = "SELECT room.id_room FROM " + TABLE + " JOIN room ON room.id_floor = floor.id_floor WHERE floor.id_floor = "  + floor.getId_floor();
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_room = rs.getInt(1);
+				room = RoomDAO.getInstance().read(id_room);
+				rooms.add(room);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return rooms;
+		
+		
+		
 	}
 }

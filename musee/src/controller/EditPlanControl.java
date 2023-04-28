@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import museum.Floor;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;
@@ -21,6 +22,21 @@ public class EditPlanControl {
 	public EditPlanControl(AnchorPane drawSection) {
 		this.drawSection = drawSection;
 	}
+	
+	public void drawFloorOn(Floor floor) {
+		
+		// Création du pane 
+		Pane pane = new Pane();
+		pane.setId(floor.getName());
+		pane.setPrefWidth(floor.getDim_x());
+		pane.setPrefHeight(floor.getDim_y());
+		pane.setStyle("-fx-background-color: #F3FBFF; -fx-border-color: #284b63 ");
+		
+		this.panesOfFloors.add(pane);
+		this.drawSection.getChildren().add(pane);
+	}
+	
+	
 	
 	private void DrawRoomOn(Room room, AnchorPane anchorPane) {
 		
@@ -64,6 +80,7 @@ public class EditPlanControl {
 		this.panesOfSpots.add(pane);
 		parentPane.getChildren().add(pane);
 	}
+	
 	
 	public void drawRoomsOn(List<Room> rooms) {
 		for(Room room : rooms) {

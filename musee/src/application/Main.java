@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
+import controllerModel.Notify;
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
@@ -193,45 +194,45 @@ public class Main extends Application {
 		return userData;
 	}
 	
-	public void addRoom(String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().create(room)) {
-			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
+			Notify.getInstance().showNotif("Création","La salle a bien été enregistrée");
 		}		
 	}	
-	public void updateRoom(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+	public void updateRoom(int id_room, String name,  Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(id_room, name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().update(room)) {
-			architectCtrl.notifyRoomSaved("La salle a été modifiée");
+			Notify.getInstance().showNotif("Modification","La salle a bien été modifiée");
 		}		
 	}
 	
 	public void deleteRoom(int id_room) {
 		Room room = RoomDAO.getInstance().read(id_room);
 		if (RoomDAO.getInstance().delete(room)) {
-			architectCtrl.notifyRoomSaved("La salle a été supprimée");
+			Notify.getInstance().showNotif("Suppression", "La salle a bien été supprimée");
 		}
 	}
 	
-	/*public void addFloor(String name, int dim_x, int dim_y, int dim_z) {
+	public void addFloor(String name, int dim_x, int dim_y, int dim_z) {
 		Floor floor = new Floor(name, dim_x, dim_y, dim_z);
 		if (FloorDAO.getInstance().create(floor)) {
-			architectCtrl.notifyFloorSaved("La salle a bien été enregistrée");
+			Notify.getInstance().showNotif("Création", "L'étage a bien été enregistrée");
 		}		
 	}	
 	public void updateFloor(int id_floor, String name, int dim_x, int dim_y, int dim_z) {
 		Floor floor = new Floor(id_floor, name, dim_x, dim_y, dim_z);
 		if (FloorDAO.getInstance().update(floor)) {
-			architectCtrl.notifyFloorSaved("La salle a été modifiée");
+			Notify.getInstance().showNotif("Modification", "L'étage a bien été modifiée");
 		}		
 	}
 	
 	public void deleteFloor(int id_floor) {
 		Floor floor = FloorDAO.getInstance().read(id_floor);
 		if (FloorDAO.getInstance().delete(floor)) {
-			architectCtrl.notifyFloorSaved("La salle a été supprimée");
+			Notify.getInstance().showNotif("Suppression", "L'étage a bien été supprimée");
 		}
-	} */
+	}
 	
 	public void addArt(String art_code, String art_title, String creation_date, String materials, int dim_x,
 			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type) {
