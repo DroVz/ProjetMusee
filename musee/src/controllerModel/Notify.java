@@ -27,7 +27,7 @@ public class Notify {
 		
 	}
 	
-	public static Notify GetInstance() {
+	public static Notify getInstance() {
 		if(instance == null) {
 			instance = new Notify();
 		}

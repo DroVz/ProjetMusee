@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
+import controllerModel.Notify;
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
@@ -12,6 +13,7 @@ import dao.ArtStatusDAO;
 import dao.ArtTypeDAO;
 import dao.AuthorDAO;
 import dao.DoorDAO;
+import dao.FloorDAO;
 import dao.RoleDAO;
 import dao.RoomDAO;
 import dao.UserDAO;
@@ -35,6 +37,7 @@ import museum.ArtStatus;
 import museum.ArtType;
 import museum.Author;
 import museum.Door;
+import museum.Floor;
 import museum.Role;
 import museum.Room;
 import museum.User;
@@ -64,7 +67,8 @@ public class Main extends Application {
 	private ObservableList<ArtType> artTypeData = FXCollections.observableArrayList();
 	private ObservableList<ArtStatus> artStatusData = FXCollections.observableArrayList();
 	private ObservableList<Author> authorData = FXCollections.observableArrayList();
-	private ObservableList<Door> doorData = FXCollections.observableArrayList();	
+	private ObservableList<Door> doorData = FXCollections.observableArrayList();
+	private ObservableList<Floor> floorData = FXCollections.observableArrayList();
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();
@@ -164,6 +168,15 @@ public class Main extends Application {
 		return doorData;
 	}
 	
+	public ObservableList<Floor> getFloorData() {
+		floorData = FXCollections.observableArrayList();
+		List<Floor> floors = FloorDAO.getInstance().readAll();
+		for (Floor floor : floors) {
+			floorData.add(floor);
+		}
+		return floorData;
+	}
+	
 	public ObservableList<Role> getRoleData() {
 		roleData = FXCollections.observableArrayList();
 		List<Role> roles = RoleDAO.getInstance().readAll();
@@ -191,23 +204,43 @@ public class Main extends Application {
 		return userData;
 	}
 	
-	public void addRoom(String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().create(room)) {
-			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
+			Notify.getInstance().showNotif("Création","La salle a bien été enregistrée");
 		}		
 	}	
-	public void updateRoom(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+	public void updateRoom(int id_room, String name,  Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(id_room, name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 		if (RoomDAO.getInstance().update(room)) {
-			architectCtrl.notifyRoomSaved("La salle a été modifiée");
+			Notify.getInstance().showNotif("Modification","La salle a bien été modifiée");
 		}		
 	}
 	
 	public void deleteRoom(int id_room) {
 		Room room = RoomDAO.getInstance().read(id_room);
 		if (RoomDAO.getInstance().delete(room)) {
-			architectCtrl.notifyRoomSaved("La salle a été supprimée");
+			Notify.getInstance().showNotif("Suppression", "La salle a bien été supprimée");
+		}
+	}
+	
+	public void addFloor(String name, int dim_x, int dim_y, int dim_z) {
+		Floor floor = new Floor(name, dim_x, dim_y, dim_z);
+		if (FloorDAO.getInstance().create(floor)) {
+			Notify.getInstance().showNotif("Création", "L'étage a bien été enregistrée");
+		}		
+	}	
+	public void updateFloor(int id_floor, String name, int dim_x, int dim_y, int dim_z) {
+		Floor floor = new Floor(id_floor, name, dim_x, dim_y, dim_z);
+		if (FloorDAO.getInstance().update(floor)) {
+			Notify.getInstance().showNotif("Modification", "L'étage a bien été modifiée");
+		}		
+	}
+	
+	public void deleteFloor(int id_floor) {
+		Floor floor = FloorDAO.getInstance().read(id_floor);
+		if (FloorDAO.getInstance().delete(floor)) {
+			Notify.getInstance().showNotif("Suppression", "L'étage a bien été supprimée");
 		}
 	}
 	

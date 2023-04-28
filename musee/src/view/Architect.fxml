@@ -1,47 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ArchitectControl">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ArchitectControl">
    <children>
-      <Label layoutX="437.0" layoutY="28.0" text="Interface architecte" />
-      <Label layoutX="14.0" layoutY="94.0" prefHeight="18.0" prefWidth="160.0" text="Salles" />
-      <TableView fx:id="roomTable" layoutX="14.0" layoutY="124.0" onMouseClicked="#handleRoomTableAction" prefHeight="354.0" prefWidth="234.0">
+      <TableView fx:id="floorTableView" layoutX="834.0" layoutY="100.0" onMouseClicked="#handleSelectFloorItem" prefHeight="217.0" prefWidth="253.0">
         <columns>
-          <TableColumn fx:id="idColumn" prefWidth="69.60003662109375" text="ID" />
-          <TableColumn fx:id="nameColumn" prefWidth="80.79998779296875" text="Nom" />
-          <TableColumn fx:id="floorColumn" prefWidth="80.79998779296875" text="Étage" />
+          <TableColumn fx:id="idFloorColumn" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="nameFloorColumn" prefWidth="177.0" text="Nom" />
         </columns>
       </TableView>
-      <Button fx:id="editAction" layoutX="93.0" layoutY="489.0" mnemonicParsing="false" onAction="#handleRoomUpdate" prefHeight="26.0" prefWidth="75.0" text="Modifier" />
-      <Button fx:id="createAction" layoutX="14.0" layoutY="489.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="26.0" prefWidth="75.0" text="Créer" />
-      <AnchorPane fx:id="editRoom" disable="true" layoutX="277.0" layoutY="103.0" prefHeight="400.0" prefWidth="278.0" style="-fx-background-color: #FFFFFF;">
+      <TableView fx:id="roomTableView" layoutX="1219.0" layoutY="93.0" onMouseClicked="#handleSelectRoomItem" prefHeight="217.0" prefWidth="253.0">
+         <columns>
+            <TableColumn fx:id="idRoomColumn" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="nameRoomColumn" prefWidth="177.0" text="Nom" />
+         </columns>
+      </TableView>
+      <Button fx:id="createFloor" layoutX="834.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateFloor" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Button>
+      <Button fx:id="deleteFloor" layoutX="997.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteFloor" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Button>
+      <Button fx:id="deleteRoom" layoutX="1382.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Button>
+      <Button fx:id="createRoom" layoutX="1219.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Button>
+      <AnchorPane fx:id="floorAnchorPane" disable="true" layoutX="822.0" layoutY="487.0" prefHeight="294.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
          <children>
-            <Label fx:id="roomFormTitle" layoutX="89.0" layoutY="14.0" text="" />
-            <Label layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="30.0" text="Nom" />
-            <TextField fx:id="inputRoomName" layoutX="105.0" layoutY="53.0" />
-            <Label layoutX="60.0" layoutY="90.0" prefHeight="18.0" prefWidth="30.0" text="Étage" textAlignment="RIGHT" />
-            <TextField fx:id="inputRoomFloor" layoutX="105.0" layoutY="86.0" />
-            <Label layoutX="31.0" layoutY="124.0" prefHeight="18.0" prefWidth="59.0" text="Largeur (x)" />
-            <Label layoutX="23.0" layoutY="158.0" prefHeight="18.0" prefWidth="75.0" text="Longueur (y)" />
-            <Label layoutX="30.0" layoutY="193.0" text="Hauteur (z)" />
-            <TextField fx:id="inputRoomDimX" layoutX="105.0" layoutY="120.0" prefHeight="26.0" prefWidth="68.0" />
-            <TextField fx:id="inputRoomDimY" layoutX="105.0" layoutY="154.0" prefHeight="26.0" prefWidth="68.0" />
-            <TextField fx:id="inputRoomDimZ" layoutX="105.0" layoutY="189.0" prefHeight="26.0" prefWidth="68.0" />
-            <Label layoutX="31.0" layoutY="229.0" prefHeight="18.0" prefWidth="59.0" text="Position x" />
-            <TextField fx:id="inputRoomPosX" layoutX="105.0" layoutY="225.0" prefHeight="26.0" prefWidth="68.0" />
-            <Label layoutX="31.0" layoutY="264.0" prefHeight="18.0" prefWidth="59.0" text="Position y" />
-            <TextField fx:id="inputRoomPosY" layoutX="105.0" layoutY="260.0" prefHeight="26.0" prefWidth="68.0" />
-            <Button layoutX="153.0" layoutY="311.0" mnemonicParsing="false" onAction="#handleSaveRoom" prefHeight="26.0" prefWidth="75.0" text="Enregistrer" />
-            <Button layoutX="53.0" layoutY="311.0" mnemonicParsing="false" onAction="#handleCancelRoomEdit" prefHeight="26.0" prefWidth="75.0" text="Annuler" />
-            <Button fx:id="addZone" layoutX="73.0" layoutY="346.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="132.0" text="Ajouter une zone" />
+            <TextField fx:id="inputNameFloor" alignment="CENTER" layoutX="107.0" layoutY="54.0" promptText="Name" />
+            <TextField fx:id="inputDimXFloor" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Largeur" />
+            <TextField fx:id="inputDimYFloor" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Longueur" />
+            <Button fx:id="confirmFloor" layoutX="31.0" layoutY="238.0" mnemonicParsing="false" onAction="#handleConfirmFloor" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Valider" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="cancelFloor" layoutX="155.0" layoutY="238.0" mnemonicParsing="false" onAction="#handleCancelFloor" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Annuler" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Label layoutX="20.0" layoutY="58.0" prefHeight="17.0" prefWidth="50.0" text="Name :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="90.0" prefHeight="17.0" prefWidth="50.0" text="Largeur :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="122.0" prefHeight="17.0" prefWidth="65.0" text="Longueur :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="156.0" prefHeight="17.0" prefWidth="65.0" text="Hauteur :" textFill="#284b63" />
+            <TextField fx:id="inputDimZFloor" alignment="CENTER" layoutX="107.0" layoutY="152.0" promptText="Hauteur" />
          </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </AnchorPane>
-      <Button fx:id="deleteAction" layoutX="174.0" layoutY="489.0" mnemonicParsing="false" onAction="#handleRoomDeletion" prefHeight="26.0" prefWidth="75.0" text="Supprimer" />
+      <AnchorPane fx:id="roomAnchorPane" disable="true" layoutX="1207.0" layoutY="487.0" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <TextField fx:id="inputNameRoom" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Name" />
+            <TextField fx:id="inputDimXRoom" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Largeur" />
+            <TextField fx:id="inputDimYRoom" alignment="CENTER" layoutX="107.0" layoutY="150.0" promptText="Longueur" />
+            <TextField fx:id="inputDimZRoom" alignment="CENTER" layoutX="107.0" layoutY="181.0" promptText="Hauteur" />
+            <TextField fx:id="inputPosXRoom" alignment="CENTER" layoutX="107.0" layoutY="218.0" promptText="Position x" />
+            <TextField fx:id="inputPosYRoom" alignment="CENTER" layoutX="107.0" layoutY="250.0" promptText="Position y" />
+            <Button fx:id="confirmRoom" layoutX="30.0" layoutY="331.0" mnemonicParsing="false" onAction="#handleConfirmRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Valider" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="cancelRoom" layoutX="149.0" layoutY="331.0" mnemonicParsing="false" onAction="#handleCancelRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Annuler" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Label layoutX="25.0" layoutY="90.0" prefHeight="17.0" prefWidth="50.0" text="Name :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="122.0" prefHeight="17.0" prefWidth="50.0" text="Largeur :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="154.0" prefHeight="17.0" prefWidth="65.0" text="Longueur :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="222.0" prefHeight="17.0" prefWidth="65.0" text="Position x :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="254.0" prefHeight="17.0" prefWidth="65.0" text="Position y :" textFill="#284b63" />
+            <Label layoutX="20.0" layoutY="185.0" prefHeight="17.0" prefWidth="65.0" text="Hauteur :" textFill="#284b63" />
+            <Label layoutX="25.0" layoutY="25.0" prefHeight="17.0" prefWidth="50.0" text="étage :" textFill="#284b63" />
+            <ChoiceBox fx:id="floorChoiceBox" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </AnchorPane>
+      <Label layoutX="834.0" layoutY="68.0" prefHeight="35.0" prefWidth="224.0" text="Création d'étages :" textFill="#284b63">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="1219.0" layoutY="58.0" prefHeight="35.0" prefWidth="286.0" text="Création de Salles :" textFill="#284b63">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <TreeView fx:id="globalTreeView" layoutX="1578.0" layoutY="88.0" prefHeight="842.0" prefWidth="253.0" />
+      <Label layoutX="1578.0" layoutY="58.0" prefHeight="35.0" prefWidth="224.0" text="Organisation des salles :" textFill="#284b63">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <AnchorPane fx:id="drawSection" layoutX="18.0" layoutY="100.0" prefHeight="972.0" prefWidth="778.0" style="-fx-background-color: #FFFFFF;" />
+      <Button fx:id="updateRoom" layoutX="1300.0" layoutY="385.0" mnemonicParsing="false" onAction="#handleUpdateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Modifier" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="updateFloor" layoutX="915.0" layoutY="385.0" mnemonicParsing="false" onAction="#handleUpdateFloor" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Modifier" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+      <ChoiceBox fx:id="SelectedFloorChoiceBox" layoutX="368.0" layoutY="46.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+      <Label layoutX="228.0" layoutY="50.0" prefHeight="17.0" prefWidth="105.0" text="étage sélectionné :" textFill="#284b63" />
    </children>
 </AnchorPane>
