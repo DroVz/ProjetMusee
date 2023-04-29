@@ -75,7 +75,7 @@ public class Floor extends Area {
 	}
 	
 	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
-
+		System.out.println((this.getPos_x()* ratio) + (this.getDim_x() * ratio) + " : " + planWidth);
 		 return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
 
 		 && (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;

@@ -5,6 +5,7 @@ import java.util.List;
 import application.Main;
 import controller.EditPlanControl;
 import controllerModel.ArtControl;
+import controllerModel.FloorControl;
 import controllerModel.Notify;
 import controllerModel.RoomControl;
 import controllerModel.SpotControl;
@@ -141,7 +142,7 @@ public class ShowRoomControl {
 		
 		// Chargement du plan 2D
 		this.editPlanControl = new EditPlanControl(this.drawSection);
-		this.editPlanControl.setRatioFitPage(RoomControl.getInstance().readAll());
+		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
 		this.initializePlan();
 		
 	}
