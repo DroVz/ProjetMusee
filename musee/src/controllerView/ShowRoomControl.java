@@ -142,8 +142,8 @@ public class ShowRoomControl {
 		
 		// Chargement du plan 2D
 		this.editPlanControl = new EditPlanControl(this.drawSection);
-		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
-		this.initializePlan();
+//		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
+//		this.initializePlan();
 		
 	}
 	
@@ -287,6 +287,7 @@ public class ShowRoomControl {
 	 */
 	private void addZone() {
 		try {
+			// récupération des champs txt
 			String zoneName = inputNameZone.getText();
 			Room room = roomChoiceBox.getValue();
 			int zoneDimX = Integer.parseInt(inputDimXZone.getText());
@@ -294,8 +295,13 @@ public class ShowRoomControl {
 			int zonePosX = Integer.parseInt(inputPosXZone.getText());
 			int zonePosY = Integer.parseInt(inputPosYZone.getText());
 			
+			// Création d'une zone 
 			Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
+			
+			// Récupération des zones pour les comparer 
 			List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
+			
+			// Vérifies que les zones ne se chevauche pas et que la zone est bien dans une salle
 			if (!zone.overlaps(checkArea) && zone.insideParent()) {
 				ZoneControl.getInstance().createZone(zone);
 			} else {
@@ -427,6 +433,8 @@ public class ShowRoomControl {
 	 * Initialisation du plan 2D
 	 */
 	private void initializePlan() {
+		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
+		this.editPlanControl.drawFloorOn(FloorControl.getInstance().readAll().get(0));
 		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
 		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
 		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());

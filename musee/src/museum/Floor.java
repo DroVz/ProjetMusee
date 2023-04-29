@@ -2,8 +2,6 @@
 
 import java.util.List;
 
-import controllerModel.FloorControl;
-
 public class Floor extends Area {
 	private int id_floor;
 	private String name;
@@ -23,7 +21,6 @@ public class Floor extends Area {
 		this.id_floor= id_floor;
 		this.name = name;
 		this.dim_z = dim_z;
-		this.rooms = FloorControl.getInstance().readRoomsBy(this);
 	}
 	
 	/**
@@ -37,7 +34,6 @@ public class Floor extends Area {
 		super(0, 0, dim_x, dim_y);
 		this.name = name;
 		this.dim_z = dim_z;
-		this.rooms = FloorControl.getInstance().readRoomsBy(this);
 	}
 
 	public int getId_floor() {

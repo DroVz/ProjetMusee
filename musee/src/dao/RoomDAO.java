@@ -15,7 +15,7 @@ public class RoomDAO extends DAO<Room> {
 	private static final String TABLE = "room";
 	private static final String PK = "id_room";
 	private static final String NAME = "name";
-	private static final String IDFLOOR = "floor";
+	private static final String IDFLOOR = "id_floor";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";

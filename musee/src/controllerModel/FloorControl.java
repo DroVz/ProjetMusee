@@ -4,7 +4,6 @@ import java.util.List;
 
 import dao.FloorDAO;
 import museum.Floor;
-import museum.Room;
 
 public class FloorControl {
 
@@ -33,10 +32,6 @@ public class FloorControl {
 		return FloorDAO.getInstance().readAll();
 	}
 	
-	public List<Room> readRoomsBy(Floor floor){
-		return FloorDAO.getInstance().readRoomsBy(floor);
-	}
-
 	public void updateFloor(Floor floor) {
 		FloorDAO.getInstance().update(floor);
 		

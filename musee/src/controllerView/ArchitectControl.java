@@ -144,9 +144,12 @@ public class ArchitectControl {
 				this.initializeTreeView();
 				// Chargement du plan 2D
 				this.editPlanControl = new EditPlanControl(this.drawSection);
-				this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
-				this.initializePlan();
-				
+//				Floor floor = FloorControl.getInstance().readAll().get(0);
+//				if (!(floor == null)) {
+//					this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
+//					this.initializePlan();
+//				}
+//				
 			}
 			
 			//Button Actions 
@@ -178,7 +181,7 @@ public class ArchitectControl {
 			@FXML
 			private void handleConfirmFloor(ActionEvent event) {
 				
-				if(this.updateFloorButtonSelected == true) {
+				if(this.updateFloorButtonSelected == false) {
 					this.addFloor();
 				}else { 
 					this.updateFloor();
@@ -298,6 +301,7 @@ public class ArchitectControl {
 			
 			private void updateFloor() {
 				Floor selectedFloor = floorTableView.getItems().get(selectedFloorLine);	
+				System.out.println(!(selectedFloor.getRooms().size() >= 1));
 				if(!(selectedFloor.getRooms().size() >= 1)) {
 					selectedFloor.setName(inputNameFloor.getText());
 				selectedFloor.setDim_x(Integer.parseInt(inputDimXFloor.getText()));
@@ -434,6 +438,7 @@ public class ArchitectControl {
 			}
 			
 			private void initializePlan() {
+				this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
 				this.editPlanControl.drawFloorOn(FloorControl.getInstance().readAll().get(0));
 				this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
 			}
