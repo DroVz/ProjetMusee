@@ -6,7 +6,6 @@ import java.util.List;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import museum.Floor;
-import museum.Point;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;

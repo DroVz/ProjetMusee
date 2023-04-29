@@ -1,4 +1,4 @@
-package controllerModel;
+package museum;
 
 import application.Main;
 import javafx.fxml.FXML;

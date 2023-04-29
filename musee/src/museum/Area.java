@@ -70,6 +70,11 @@ public abstract class Area {
 		return this.points;
 	}
 	
+	/**
+	 * Vérifie si une Area chevauche une des Areas de la liste "areas".
+	 * @param areas
+	 * @return
+	 */
 	public boolean overlaps(List<Area> areas) {
 		boolean pointInside = false;
 		
@@ -90,6 +95,11 @@ public abstract class Area {
 		return pointInside;
 	}
 	
+	/**
+	 * Vérifie si une Area en chevauche une autre.
+	 * @param aera
+	 * @return
+	 */
 	private boolean overlapsOn(Area aera) {
 		boolean pointInside = false;
 		
@@ -101,6 +111,11 @@ public abstract class Area {
 		return pointInside;
 	}
 	
+	/**
+	 * Vérifie si un point est à l'intérieur d'une Area.
+	 * @param point
+	 * @return
+	 */
 	public boolean checkPoint(Point point) {
 		boolean pointInside = false;
 		int x = point.getPointX();
@@ -113,5 +128,4 @@ public abstract class Area {
 		
 		return pointInside;
 	}
-
 }

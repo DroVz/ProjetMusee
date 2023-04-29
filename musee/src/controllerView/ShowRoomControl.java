@@ -4,12 +4,11 @@ import java.util.List;
 
 import application.Main;
 import controller.EditPlanControl;
-import controllerModel.ArtControl;
-import controllerModel.FloorControl;
-import controllerModel.Notify;
-import controllerModel.RoomControl;
-import controllerModel.SpotControl;
-import controllerModel.ZoneControl;
+import dao.ArtDAO;
+import dao.FloorDAO;
+import dao.RoomDAO;
+import dao.SpotDAO;
+import dao.ZoneDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import museum.Area;
 import museum.Art;
+import museum.Notify;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;
@@ -157,8 +157,7 @@ public class ShowRoomControl {
 	private void handleDeleteZone(ActionEvent event) {
 		
 		Zone selectedZone = zoneTableView.getItems().get(selectedZoneLine);
-		SpotControl.getInstance().deleteSpotOf(selectedZone);
-		ZoneControl.getInstance().deleteZone(selectedZone);
+		ZoneDAO.getInstance().delete(selectedZone);
 		selectedZoneLine = 0;
 		
 		this.refreshWindow();
@@ -185,10 +184,8 @@ public class ShowRoomControl {
 	
 	@FXML
 	private void handleDeleteSpot(ActionEvent event) {
-		SpotControl spotControl = SpotControl.getInstance();
-		
 		museum.Spot selectedSpot = spotTableView.getItems().get(selectedSpotLine);
-		spotControl.deleteSpot(selectedSpot);
+		SpotDAO.getInstance().delete(selectedSpot);
 		selectedSpotLine = 0;
 		
 		this.refreshWindow();
@@ -299,11 +296,11 @@ public class ShowRoomControl {
 			Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
 			
 			// Récupération des zones pour les comparer 
-			List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
+			List<Area> checkArea = new ArrayList<Area>(ZoneDAO.getInstance().readAll());
 			
 			// Vérifies que les zones ne se chevauche pas et que la zone est bien dans une salle
 			if (!zone.overlaps(checkArea) && zone.insideParent()) {
-				ZoneControl.getInstance().createZone(zone);
+				ZoneDAO.getInstance().create(zone);
 			} else {
 				this.resetZoneTextField();
 				this.setZoneError();
@@ -332,10 +329,10 @@ public class ShowRoomControl {
 		
 		Spot spot = new Spot(spotName,spotDimX,spotDimY,spotDimZ, spotPosX, spotPosY, spotPosZ, zone, art);
 		 
-		List<Area> checkArea = new ArrayList<Area>(SpotControl.getInstance().readAll());
+		List<Area> checkArea = new ArrayList<Area>(SpotDAO.getInstance().readAll());
 		System.out.println(spot.getZone().getPos_x() + " : " + spot.getZone().getPos_x() + " : " + spot.getZone().getDim_x() + " : " + spot.getZone().getDim_y());
 		if (!spot.overlaps(checkArea) && spot.insideParent()) {
-			SpotControl.getInstance().createSpot(spot);
+			SpotDAO.getInstance().create(spot);
 		} else {
 			this.resetSpotTextField();
 			this.setSpotError();
@@ -347,7 +344,7 @@ public class ShowRoomControl {
 	 * Initialisation du composant zone TableView 
 	 */
 	private void initializeZoneTableView() {
-			this.zoneTableView.getItems().setAll(ZoneControl.getInstance().readAll());
+			this.zoneTableView.getItems().setAll(ZoneDAO.getInstance().readAll());
 			idZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 			nameZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
@@ -356,7 +353,7 @@ public class ShowRoomControl {
 	 * Initialisation du composant spot TableView 
 	 */
 	private void initializeSpotTableView() {
-		this.spotTableView.getItems().setAll(SpotControl.getInstance().readAll());
+		this.spotTableView.getItems().setAll(SpotDAO.getInstance().readAll());
 		idSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 		nameSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
@@ -365,21 +362,21 @@ public class ShowRoomControl {
 	 * Initialisation du composant room ChoiceBox 
 	 */
 	private void initializeRoomChoiceBox() {
-		roomChoiceBox.getItems().setAll(RoomControl.getInstance().readAll());
+		roomChoiceBox.getItems().setAll(RoomDAO.getInstance().readAll());
 	}
 	
 	/**
 	 * Initialisation du composant zone ChoiceBox 
 	 */
 	private void initializeZoneChoiceBox() {
-		zoneChoiceBox.getItems().setAll(ZoneControl.getInstance().readAll());
+		zoneChoiceBox.getItems().setAll(ZoneDAO.getInstance().readAll());
 	}
 	
 	/**
 	 * Initialisation du composant art ChoiceBox 
 	 */
 	private void initializeArtChoiceBox() {
-		artChoiceBox.getItems().setAll(ArtControl.getInstance().readAll());
+		artChoiceBox.getItems().setAll(ArtDAO.getInstance().readAllAvailable());
 	}
 	
 	/**
@@ -387,9 +384,9 @@ public class ShowRoomControl {
 	 */
 	private void initializeTreeView() {
 		// Récupère les éléments du musée 
-		List<Room> rooms = RoomControl.getInstance().readAll();
-		List<Zone> zones = ZoneControl.getInstance().readAll();
-		List<Spot> spots = SpotControl.getInstance().readAll();
+		List<Room> rooms = RoomDAO.getInstance().readAll();
+		List<Zone> zones = ZoneDAO.getInstance().readAll();
+		List<Spot> spots = SpotDAO.getInstance().readAll();
 		// Liste pour retrouver l'adresse mémoire des objets créés
 		ArrayList<TreeItem<String>> roomItems = new ArrayList<TreeItem<String>>();
 		ArrayList<TreeItem<String>> zoneItems = new ArrayList<TreeItem<String>>();
@@ -433,11 +430,11 @@ public class ShowRoomControl {
 	 * Initialisation du plan 2D
 	 */
 	private void initializePlan() {
-		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
-		this.editPlanControl.drawFloorOn(FloorControl.getInstance().readAll().get(0));
-		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
-		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
-		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());
+		this.editPlanControl.setRatioFitPage(FloorDAO.getInstance().readAll().get(0));
+		this.editPlanControl.drawFloorOn(FloorDAO.getInstance().readAll().get(0));
+		this.editPlanControl.drawRoomsOn(RoomDAO.getInstance().readAll());
+		this.editPlanControl.drawZonesOn(ZoneDAO.getInstance().readAll());
+		this.editPlanControl.drawSpotsOn(SpotDAO.getInstance().readAll());
 	}
 	
 	/**

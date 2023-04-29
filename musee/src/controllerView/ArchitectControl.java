@@ -5,9 +5,8 @@ import java.util.List;
 
 import application.Main;
 import controller.EditPlanControl;
-import controllerModel.FloorControl;
-import controllerModel.Notify;
-import controllerModel.RoomControl;
+import dao.FloorDAO;
+import dao.RoomDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import museum.Area;
 import museum.Floor;
+import museum.Notify;
 import museum.Room;
 
 public class ArchitectControl {
@@ -162,8 +162,7 @@ public class ArchitectControl {
 			private void handleDeleteFloor(ActionEvent event) {
 				
 				Floor selectedFloor = floorTableView.getItems().get(selectedFloorLine);
-				RoomControl.getInstance().deleteRoomOf(selectedFloor);
-				FloorControl.getInstance().deleteFloor(selectedFloor);
+				FloorDAO.getInstance().delete(selectedFloor);
 				selectedFloorLine = 0;
 				
 				this.refreshWindow();
@@ -217,10 +216,9 @@ public class ArchitectControl {
 			}
 			@FXML
 			private void handleDeleteRoom(ActionEvent event) {
-				RoomControl roomControl = RoomControl.getInstance();
 				
 				museum.Room selectedRoom = roomTableView.getItems().get(selectedRoomLine);
-				roomControl.deleteRoom(selectedRoom);
+				RoomDAO.getInstance().delete(selectedRoom);
 				selectedRoomLine = 0;
 				
 				this.refreshWindow();
@@ -292,7 +290,7 @@ public class ArchitectControl {
 					int floorDimZ = Integer.parseInt(inputDimZFloor.getText());
 					
 					Floor floor = new Floor(floorName,floorDimX,floorDimY,floorDimZ);
-						FloorControl.getInstance().createFloor(floor);
+					FloorDAO.getInstance().create(floor);
 				}
 				catch (NumberFormatException numberException) {
 					mainControler.notifyFail("Valeurs inscrites incorectes");
@@ -308,7 +306,7 @@ public class ArchitectControl {
 				selectedFloor.setDim_y(Integer.parseInt(inputDimYFloor.getText()));
 				selectedFloor.setDim_z(Integer.parseInt(inputDimZFloor.getText()));
 				
-				FloorControl.getInstance().updateFloor(selectedFloor);
+				FloorDAO.getInstance().update(selectedFloor);
 				
 				} else {
 					
@@ -328,12 +326,12 @@ public class ArchitectControl {
 				
 				Room room = new Room(roomName, floor, roomDimX,roomDimY,roomDimZ, roomPosX, roomPosY);
 				 
-				List<Area> checkArea = new ArrayList<Area>(RoomControl.getInstance().readAll());
+				List<Area> checkArea = new ArrayList<Area>(RoomDAO.getInstance().readAll());
 				System.out.println(room.getFloor().getDim_x() + " : " + room.getFloor().getDim_y());
 				System.out.println(room.overlaps(checkArea));
 				System.out.println(room.insideParent());
 				if (!room.overlaps(checkArea) && room.insideParent()) {
-					RoomControl.getInstance().createRoom(room);
+					RoomDAO.getInstance().create(room);
 				} else {
 					this.resetRoomTextField();
 					this.setRoomError();
@@ -361,10 +359,10 @@ public class ArchitectControl {
 				selectedRoom.setPos_y(Integer.parseInt(inputPosYRoom.getText()));
 				
 				 
-				List<Area> checkArea = new ArrayList<Area>(RoomControl.getInstance().readAll());
+				List<Area> checkArea = new ArrayList<Area>(RoomDAO.getInstance().readAll());
 				checkArea.remove(selectedRoom);
 				if (!selectedRoom.overlaps(checkArea) && selectedRoom.insideParent()) {
-					RoomControl.getInstance().updateRoom(selectedRoom);
+					RoomDAO.getInstance().update(selectedRoom);
 				} else {
 					this.resetRoomTextField();
 					this.setRoomError();
@@ -384,30 +382,29 @@ public class ArchitectControl {
 			
 			// Initialisation des éléments 
 			private void initializeFloorTableView() {
-				System.out.println(FloorControl.getInstance().readAll().toString());
-					this.floorTableView.getItems().setAll(FloorControl.getInstance().readAll());
+					this.floorTableView.getItems().setAll(FloorDAO.getInstance().readAll());
 					idFloorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId_floor()+""));
 					nameFloorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 			}
 			private void initializeRoomTableView() {
-				this.roomTableView.getItems().setAll(RoomControl.getInstance().readAll());
+				this.roomTableView.getItems().setAll(RoomDAO.getInstance().readAll());
 				idRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId_room()+""));
 				nameRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 		}
 			
 			private void initializeFloorChoiceBox() {
-				 floorChoiceBox.getItems().setAll(FloorControl.getInstance().readAll());
+				 floorChoiceBox.getItems().setAll(FloorDAO.getInstance().readAll());
 			}
 			
 			private void initializeSelectedFloorChoiceBox() {
-				 this.SelectedFloorChoiceBox.getItems().setAll(FloorControl.getInstance().readAll());
+				 this.SelectedFloorChoiceBox.getItems().setAll(FloorDAO.getInstance().readAll());
 			}
 			
 			
 			private void initializeTreeView() {
 				// Récupère les éléments du musée 
-				List<Floor> floors = FloorControl.getInstance().readAll();
-				List<Room> rooms = RoomControl.getInstance().readAll();
+				List<Floor> floors = FloorDAO.getInstance().readAll();
+				List<Room> rooms = RoomDAO.getInstance().readAll();
 				// Liste pour retrouver l'adresse mémoire des objets créés
 				ArrayList<TreeItem<String>> floorItems = new ArrayList<TreeItem<String>>();
 				ArrayList<TreeItem<String>> roomItems = new ArrayList<TreeItem<String>>();
@@ -438,9 +435,9 @@ public class ArchitectControl {
 			}
 			
 			private void initializePlan() {
-				this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
-				this.editPlanControl.drawFloorOn(FloorControl.getInstance().readAll().get(0));
-				this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
+				this.editPlanControl.setRatioFitPage(FloorDAO.getInstance().readAll().get(0));
+				this.editPlanControl.drawFloorOn(FloorDAO.getInstance().readAll().get(0));
+				this.editPlanControl.drawRoomsOn(RoomDAO.getInstance().readAll());
 			}
 			
 			private void refreshWindow() {
