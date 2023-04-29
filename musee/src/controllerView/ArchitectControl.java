@@ -144,6 +144,7 @@ public class ArchitectControl {
 				this.initializeTreeView();
 				// Chargement du plan 2D
 				this.editPlanControl = new EditPlanControl(this.drawSection);
+				this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
 				this.initializePlan();
 				
 			}

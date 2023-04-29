@@ -29,8 +29,8 @@ public class EditPlanControl {
 		// Création du pane 
 		Pane pane = new Pane();
 		pane.setId(floor.getName());
-		pane.setPrefWidth(floor.getDim_x());
-		pane.setPrefHeight(floor.getDim_y());
+		pane.setPrefWidth(floor.getDim_x() * this.ratio);
+		pane.setPrefHeight(floor.getDim_y() * this.ratio);
 		pane.setStyle("-fx-background-color: #F3FBFF; -fx-border-color: #284b63 ");
 		
 		this.panesOfFloors.add(pane);
@@ -128,17 +128,11 @@ public class EditPlanControl {
 		this.panesOfSpots.clear();
 	}
 	
-	public void setRatioFitPage(List<Room> rooms) {
-		boolean ratioIsGreat = false;
+	public void setRatioFitPage(Floor floor) {
 		
-		while (!ratioIsGreat) {
-			ratioIsGreat = true;
-			for(Room room : rooms) {
-				if(!room.insidePane((int)this.drawSection.getPrefWidth(), (int)this.drawSection.getPrefHeight(),this.ratio)) {
-					ratioIsGreat = false;
-				}
-			}
-			if (ratioIsGreat == false ) {this.ratio -= 0.1;}
+		while (!floor.insidePane((int)this.drawSection.getPrefWidth(), (int)this.drawSection.getPrefHeight(),this.ratio)) {
+			this.ratio -= 0.05;
+			System.out.println(this.ratio);
 		}
 	}
 
