@@ -70,15 +70,18 @@ public class Floor extends Area {
 		return this.getName();
 	}
 	
-	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
-		System.out.println((this.getPos_x()* ratio) + (this.getDim_x() * ratio) + " : " + planWidth);
-		 return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
-
-		 && (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;
-
-		 }
 	public List<Room> getRooms(){
 		return this.rooms;
 	}
+	
+	/**
+	 * Vérifie que l'étage est bien dans le conteneur supérieur.
+	 * @return True si l'étage est bien dans le conteneur supérieur.
+	 */
+	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
+		 return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
+		 && (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;
+
+		 }
 	
 }

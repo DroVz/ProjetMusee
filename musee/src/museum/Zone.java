@@ -61,6 +61,10 @@ public class Zone extends Area {
 		
 	}
 
+	/**
+	 * Vérifie que la zone est bien dans la salle parent.
+	 * @return True si la zone est bien dans la salle parent.
+	 */
 	public boolean insideParent() {
 		return this.getPos_x() + this.getDim_x() <= this.getRoom().getDim_x() 
 				&& this.getPos_y() + this.getDim_y() <= this.getRoom().getDim_y();

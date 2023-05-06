@@ -9,10 +9,12 @@ import java.util.List;
 
 import museum.Floor;
 import museum.Room;
+import museum.Zone;
 
 public class RoomDAO extends DAO<Room> {
 	
 	private static final String TABLE = "room";
+	private static final String ZONETABLE = "zone";
 	private static final String PK = "id_room";
 	private static final String NAME = "name";
 	private static final String IDFLOOR = "id_floor";
@@ -124,9 +126,21 @@ public class RoomDAO extends DAO<Room> {
 				int pos_y = rs.getInt(POSY);
 				
 				Floor floor = FloorDAO.getInstance().read(rs.getInt(IDFLOOR));
-				
 				room = new Room(id, nom, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
 				data.put(id, room);
+				
+				if (room != null) {
+	                requete = "SELECT * FROM " + ZONETABLE + " WHERE " + PK + " = " + id;
+	                rs = Connect.executeQuery(requete);
+	                List<Zone> zones = new ArrayList<>();
+
+	                while (rs.next()) {
+	                    int zoneId = rs.getInt("id_zone");
+	                    Zone zone = ZoneDAO.getInstance().read(zoneId);
+	                    zones.add(zone);
+	                }
+	                room.setZones(zones);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

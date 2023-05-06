@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import museum.Floor;
@@ -101,8 +102,14 @@ public class EditPlanControl {
 		pane.setPrefWidth(zone.getDim_x() * this.ratio);
 		pane.setPrefHeight(zone.getDim_y() * this.ratio);
 		pane.setStyle("-fx-background-color: #C3DDEE");
+		
+		Label idLabel = new Label();
+		idLabel.setText(zone.getId()+"");
+		idLabel.setLayoutX((zone.getDim_x() * this.ratio)/3);
+		idLabel.setLayoutY((zone.getDim_y() * this.ratio)/3);
 		// ; -fx-border-color: #284b63 
 		this.panesOfZones.add(pane);
+		pane.getChildren().add(idLabel);
 		parentPane.getChildren().add(pane);
 	}
 	
@@ -141,8 +148,10 @@ public class EditPlanControl {
 	 * @param zones
 	 */
 	public void drawZonesOn(List<Zone> zones) {
-		for(Zone zone : zones) {
-			this.DrawZoneOn(zone, this.findPane(panesOfRooms, zone.getRoom().getName()));
+		if (zones != null) {
+			for(Zone zone : zones) {
+				this.DrawZoneOn(zone, this.findPane(panesOfRooms, zone.getRoom().getName()));
+			}
 		}
 	}
 	
