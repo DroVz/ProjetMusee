@@ -13,6 +13,7 @@ import museum.Room;
 public class FloorDAO extends DAO<Floor> {
 	
 	private static final String TABLE = "floor";
+	private static final String ROOMTABLE = "room";
 	private static final String PK = "id_floor";
 	private static final String NAME = "floor_name";
 	private static final String DIMX = "dim_x";
@@ -39,9 +40,9 @@ public class FloorDAO extends DAO<Floor> {
 			String requete = "INSERT INTO "+TABLE+" ("+NAME+", "+DIMX+", "+DIMY+", "+DIMZ+") VALUES (?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getName());
-			pst.setInt(3, floor.getDim_x());
-			pst.setInt(4, floor.getDim_y());
-			pst.setInt(5, floor.getDim_z());
+			pst.setInt(2, floor.getDim_x());
+			pst.setInt(3, floor.getDim_y());
+			pst.setInt(4, floor.getDim_z());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -79,7 +80,7 @@ public class FloorDAO extends DAO<Floor> {
 		boolean success = true;
 		try {
 			String requete = "UPDATE "+TABLE+" SET "+NAME+"= ?, "+DIMX+"= ?,"+DIMY+"= ?,"+DIMZ
-					+"= ?= ? WHERE "+PK+"= ?";
+					+"= ? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getName());
 			pst.setInt(2, floor.getDim_x());
@@ -112,6 +113,19 @@ public class FloorDAO extends DAO<Floor> {
 				int dim_z = rs.getInt(DIMZ);
 				floor = new Floor(id, nom, dim_x, dim_y, dim_z);
 				data.put(id, floor);
+				
+				if (floor != null) {
+	                requete = "SELECT * FROM " + ROOMTABLE + " WHERE " + PK + " = " + id;
+	                rs = Connect.executeQuery(requete);
+	                List<Room> rooms = new ArrayList<>();
+
+	                while (rs.next()) {
+	                    int roomId = rs.getInt("id_room");
+	                    Room room = RoomDAO.getInstance().read(roomId);
+	                    rooms.add(room);
+	                }
+	                floor.setRooms(rooms);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -137,24 +151,4 @@ public class FloorDAO extends DAO<Floor> {
 		return floors;		
 	}
 	
-	public List<Room> readRoomsBy(Floor floor){
-		List<Room> rooms = new ArrayList<Room>();
-		Room room = null;
-		try {			
-			String requete = "SELECT room.id_room FROM " + TABLE + " JOIN room ON room.id_floor = floor.id_floor WHERE floor.id_floor = "  + floor.getId_floor();
-			ResultSet rs = Connect.executeQuery(requete);
-			while(rs.next()) {
-				int id_room = rs.getInt(1);
-				room = RoomDAO.getInstance().read(id_room);
-				rooms.add(room);
-			}
-		} catch (SQLException e) {
-			// e.printStackTrace();
-			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
-		}
-		return rooms;
-		
-		
-		
-	}
 }

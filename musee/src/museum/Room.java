@@ -1,6 +1,5 @@
  package museum;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Room extends Area {
@@ -8,6 +7,7 @@ public class Room extends Area {
 	private String name;
 	private Floor floor;
 	private int dim_z;
+	private List<Zone> zones;
 	
 	/**
 	 * constructor for Room if id_room is known
@@ -82,16 +82,21 @@ public class Room extends Area {
 	public String toString() {
 		return this.name;
 	}
-	
 
+	public List<Zone> getZones() {
+		return zones;
+	}
+
+	public void setZones(List<Zone> zones) {
+		this.zones = zones;
+	}
+
+	/**
+	 * Vérifie que la salle est bien dans l'étage parent.
+	 * @return True si la salle est bien dans l'étage parent.
+	 */
 	public boolean insideParent() {
 		return this.getPos_x() + this.getDim_x() <= this.getFloor().getDim_x() 
 				&& this.getPos_y() + this.getDim_y() <= this.getFloor().getDim_y();
     }
-
-	public Boolean insidePane(int planWidth, int planHeight, double ratio) {
-		return (this.getPos_x()* ratio) + (this.getDim_x() * ratio)<= planWidth 
-				&& (this.getPos_y()*ratio) + (this.getDim_y() * ratio)<= planHeight;
-
-	}
 }

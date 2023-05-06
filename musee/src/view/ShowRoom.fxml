@@ -13,13 +13,13 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ShowRoomControl">
    <children>
-      <TableView fx:id="zoneTableView" layoutX="834.0" layoutY="100.0" onMouseClicked="#handleSelectZoneItem" prefHeight="217.0" prefWidth="253.0">
+      <TableView fx:id="zoneTableView" layoutX="834.0" layoutY="100.0" prefHeight="217.0" prefWidth="253.0">
         <columns>
           <TableColumn fx:id="idZoneColumn" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="nameZoneColumn" prefWidth="177.0" text="Nom" />
         </columns>
       </TableView>
-      <TableView fx:id="spotTableView" layoutX="1219.0" layoutY="93.0" onMouseClicked="#handleSelectSpotItem" prefHeight="217.0" prefWidth="253.0">
+      <TableView fx:id="spotTableView" layoutX="1219.0" layoutY="93.0" prefHeight="217.0" prefWidth="253.0">
          <columns>
             <TableColumn fx:id="idSpotColumn" prefWidth="75.0" text="ID" />
             <TableColumn fx:id="nameSpotColumn" prefWidth="177.0" text="Nom" />
@@ -68,7 +68,7 @@
             <Insets />
          </opaqueInsets>
       </AnchorPane>
-      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0"  prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
+      <AnchorPane fx:id="spotAnchorPane" disable="true" layoutX="1207.0" layoutY="379.0" prefHeight="387.0" prefWidth="276.0" style="-fx-background-color: #FFFFFF;">
          <children>
             <TextField fx:id="inputNameSpot" alignment="CENTER" layoutX="107.0" layoutY="86.0" promptText="Name" />
             <TextField fx:id="inputDimXSpot" alignment="CENTER" layoutX="107.0" layoutY="118.0" promptText="Largeur" />
@@ -94,7 +94,7 @@
             <Label layoutX="20.0" layoutY="286.0" prefHeight="17.0" prefWidth="65.0" text="Position z :" textFill="#284b63" />
             <Label layoutX="25.0" layoutY="25.0" prefHeight="17.0" prefWidth="50.0" text="Zone :" textFill="#284b63" />
             <ChoiceBox fx:id="zoneChoiceBox" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
-            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" prefWidth="150.0" onAction="#handleSetInputOfArt" style="-fx-background-color: #3c6e71;" />
+            <ChoiceBox fx:id="artChoiceBox" layoutX="107.0" layoutY="55.0" onAction="#handleSetInputOfArt" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
             <Label layoutX="20.0" layoutY="59.0" prefHeight="17.0" prefWidth="50.0" text="Oeuvre :" textFill="#284b63" />
          </children>
          <opaqueInsets>
@@ -123,5 +123,11 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
+      <ChoiceBox fx:id="floorSelectedChoiceBox" layoutX="449.0" layoutY="46.0" onAction="#handleSetInputOfFloor" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+      <Label layoutX="270.0" layoutY="41.0" prefHeight="35.0" prefWidth="179.0" text="Etage sélectionné :" textFill="#284b63">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

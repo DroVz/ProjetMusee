@@ -3,7 +3,6 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import controllerModel.Notify;
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
@@ -38,6 +37,7 @@ import museum.ArtType;
 import museum.Author;
 import museum.Door;
 import museum.Floor;
+import museum.Notify;
 import museum.Role;
 import museum.Room;
 import museum.User;

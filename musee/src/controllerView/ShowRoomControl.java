@@ -4,12 +4,10 @@ import java.util.List;
 
 import application.Main;
 import controller.EditPlanControl;
-import controllerModel.ArtControl;
-import controllerModel.FloorControl;
-import controllerModel.Notify;
-import controllerModel.RoomControl;
-import controllerModel.SpotControl;
-import controllerModel.ZoneControl;
+import dao.ArtDAO;
+import dao.FloorDAO;
+import dao.SpotDAO;
+import dao.ZoneDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,10 +18,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import museum.Area;
 import museum.Art;
+import museum.Floor;
+import museum.Notify;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;
@@ -111,11 +110,14 @@ public class ShowRoomControl {
 	private ChoiceBox<Zone> zoneChoiceBox;
 	@FXML 
 	private ChoiceBox<Art> artChoiceBox;
+	@FXML 
+	private ChoiceBox<Floor> floorSelectedChoiceBox;
 	
 	// Private property 
-	private int selectedZoneLine = 0; 
-	private int selectedSpotLine = 0; 
 	private EditPlanControl editPlanControl;
+	private Floor selectedFloor;
+	private List<Zone> zones = new ArrayList<Zone>();
+	private List<Spot> spots = new ArrayList<Spot>();
 	
 	public ShowRoomControl() {
 		super();
@@ -132,19 +134,13 @@ public class ShowRoomControl {
 	
 	@FXML 
 	private void initialize() {
-		// Initialisation des éléments FXML
-		this.initializeZoneTableView();
-		this.initializeSpotTableView();
-		this.initializeRoomChoiceBox();
-		this.initializeZoneChoiceBox();
-		this.initializeArtChoiceBox();
-		this.initializeTreeView();
 		
-		// Chargement du plan 2D
+		// Création d'une nouvelle zone de dessin
 		this.editPlanControl = new EditPlanControl(this.drawSection);
-		this.editPlanControl.setRatioFitPage(FloorControl.getInstance().readAll().get(0));
-		this.initializePlan();
-		
+				
+		// Initialisation des éléments FXML
+		this.initializeFloorSelectedChoiceBox();
+		this.initializeArtChoiceBox();
 	}
 	
 	//Button Actions 
@@ -155,29 +151,33 @@ public class ShowRoomControl {
 	
 	@FXML
 	private void handleDeleteZone(ActionEvent event) {
-		
-		Zone selectedZone = zoneTableView.getItems().get(selectedZoneLine);
-		SpotControl.getInstance().deleteSpotOf(selectedZone);
-		ZoneControl.getInstance().deleteZone(selectedZone);
-		selectedZoneLine = 0;
-		
-		this.refreshWindow();
+		Zone selectedZone = zoneTableView.getSelectionModel().getSelectedItem();
+		if(selectedZone != null) {
+			zoneTableView.getItems().remove(selectedZone);
+			zoneTableView.getSelectionModel().clearSelection();
+			ZoneDAO.getInstance().delete(selectedZone);
+			this.zones.remove(selectedZone);
+			
+			this.updateFxmlComponent();
+		}
 	}
 	
 	@FXML
 	private void handleConfirmZone(ActionEvent event) {
 		this.addZone();
-		this.refreshWindow();
-		this.resetZoneTextField();
+		this.clearZoneTextField();
 		zoneAnchorPane.setDisable(true);
+		
+		this.updateFxmlComponent();
 	}
 	
 	@FXML
 	private void handleCancelZone(ActionEvent event) {
-		this.resetZoneTextField();
+		this.clearZoneTextField();
 		zoneAnchorPane.setDisable(true);
 	}
 
+	
 	@FXML
 	private void handleCreateSpot(ActionEvent event) {
 	spotAnchorPane.setDisable(false);
@@ -185,26 +185,29 @@ public class ShowRoomControl {
 	
 	@FXML
 	private void handleDeleteSpot(ActionEvent event) {
-		SpotControl spotControl = SpotControl.getInstance();
-		
-		museum.Spot selectedSpot = spotTableView.getItems().get(selectedSpotLine);
-		spotControl.deleteSpot(selectedSpot);
-		selectedSpotLine = 0;
-		
-		this.refreshWindow();
+		Spot selectedSpot = spotTableView.getSelectionModel().getSelectedItem();
+		if(selectedSpot != null) {
+			spotTableView.getItems().remove(selectedSpot);
+			spotTableView.getSelectionModel().clearSelection();
+			SpotDAO.getInstance().delete(selectedSpot);
+			this.spots.remove(selectedSpot);
+			
+			this.updateFxmlComponent();
+		}
 	}
 	
 	@FXML
 	private void handleConfirmSpot(ActionEvent event) {
 		this.addSpot();
-		this.refreshWindow();
-		this.resetSpotTextField();
+		this.clearSpotTextField();
 		spotAnchorPane.setDisable(true);
+		
+		this.updateFxmlComponent();
 	}
 	
 	@FXML
 	private void handleCancelSpot(ActionEvent event) {
-		this.resetSpotTextField();
+		this.clearSpotTextField();
 		spotAnchorPane.setDisable(true);
 	}
 	
@@ -214,16 +217,6 @@ public class ShowRoomControl {
 	}
 	
 	//Clicked Actions 
-	@FXML 
-	private void handleSelectZoneItem(MouseEvent event) {
-		selectedZoneLine = zoneTableView.getSelectionModel().getSelectedIndex();
-	}
-	
-	@FXML 
-	private void handleSelectSpotItem(MouseEvent event) {
-		selectedSpotLine = spotTableView.getSelectionModel().getSelectedIndex();
-	}
-	
 	@FXML 
 	private void handleSetInputOfArt(ActionEvent event) {
 		// L'évent onAction est pas écrit dans sceneBuilder.
@@ -236,57 +229,58 @@ public class ShowRoomControl {
 		}
 	}
 	
+	@FXML
+	private void handleSetInputOfFloor(ActionEvent event) {
+		this.selectedFloor = this.floorSelectedChoiceBox.getValue();
+		System.out.println(this.selectedFloor == null);
+		
+		if (selectedFloor != null) {
+			System.out.println(selectedFloor.getName());
+			this.initializeListOfZones();
+			this.initializeListOfSpots();
+			
+			this.initializeZoneTableView();
+			this.initializeSpotTableView();
+			
+			this.initializeTreeView();
+			
+			this.initializeRoomChoiceBox();
+			this.initializeZoneChoiceBox();
+			
+			this.initializePlan();
+		}
+	}
+	
+	/**
+	 * Supprime le texte des composants zone TextField 
+	 */
+	private void clearZoneTextField() {
+		inputNameZone.clear();
+		inputDimXZone.clear();
+		inputDimYZone.clear();
+		inputPosXZone.clear();
+		inputPosYZone.clear();
+	}
+	
 	/**
 	 * Supprime le texte des composants spot TextField 
 	 */
-	private void resetZoneTextField() {
-		inputNameZone.setText("");
-		inputDimXZone.setText("");
-		inputDimYZone.setText("");
-		inputPosXZone.setText("");
-		inputPosYZone.setText("");
+	private void clearSpotTextField() {
+		inputNameSpot.clear();
+		inputDimXSpot.clear();
+		inputDimYSpot.clear();
+		inputDimZSpot.clear();
+		inputPosXSpot.clear();
+		inputPosYSpot.clear();
+		inputPosZSpot.clear();
 	}
-	
-	/**
-	 * Modification de certains composant zone TextField
-	 */
-	private void setZoneError() {
-		inputDimXZone.setText("Erreur");
-		inputDimYZone.setText("Erreur");
-		inputPosXZone.setText("Erreur");
-		inputPosYZone.setText("Erreur");
-	}
-	
-	
-	/**
-	 * Supprime le texte des composants spot TextField 
-	 */
-	private void resetSpotTextField() {
-		inputNameSpot.setText("");
-		inputDimXSpot.setText("");
-		inputDimYSpot.setText("");
-		inputDimZSpot.setText("");
-		inputPosXSpot.setText("");
-		inputPosYSpot.setText("");
-		inputPosZSpot.setText("");
-	}
-	
-	/**
-	 * Modification de certains composant spot TextField
-	 */
-	private void setSpotError() {
-		inputDimXSpot.setText("Erreur");
-		inputDimYSpot.setText("Erreur");
-		inputPosXSpot.setText("Erreur");
-		inputPosYSpot.setText("Erreur");
-	}
-	
-	
+
 	/**
 	 * Ajoute une zone dans une room
 	 */
 	private void addZone() {
 		try {
+			// récupération des champs txt
 			String zoneName = inputNameZone.getText();
 			Room room = roomChoiceBox.getValue();
 			int zoneDimX = Integer.parseInt(inputDimXZone.getText());
@@ -294,13 +288,19 @@ public class ShowRoomControl {
 			int zonePosX = Integer.parseInt(inputPosXZone.getText());
 			int zonePosY = Integer.parseInt(inputPosYZone.getText());
 			
+			// Création d'une zone 
 			Zone zone = new Zone(zoneName,zoneDimX,zoneDimY,zonePosX,zonePosY, room);
-			List<Area> checkArea = new ArrayList<Area>(ZoneControl.getInstance().readAll());
+			
+			// Récupération des zones pour les comparer 
+			List<Area> checkArea = new ArrayList<Area>(this.zones);
+			
+			// Vérifies que les zones ne se chevauche pas et que la zone est bien dans une salle
 			if (!zone.overlaps(checkArea) && zone.insideParent()) {
-				ZoneControl.getInstance().createZone(zone);
+				ZoneDAO.getInstance().create(zone);
+				zoneTableView.getItems().add(zone);
+				this.zones.add(zone);
 			} else {
-				this.resetZoneTextField();
-				this.setZoneError();
+				this.clearZoneTextField();
 				Notify.getInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de la zone est incorecte !");
 			}
 		}
@@ -326,13 +326,15 @@ public class ShowRoomControl {
 		
 		Spot spot = new Spot(spotName,spotDimX,spotDimY,spotDimZ, spotPosX, spotPosY, spotPosZ, zone, art);
 		 
-		List<Area> checkArea = new ArrayList<Area>(SpotControl.getInstance().readAll());
-		System.out.println(spot.getZone().getPos_x() + " : " + spot.getZone().getPos_x() + " : " + spot.getZone().getDim_x() + " : " + spot.getZone().getDim_y());
+		List<Area> checkArea = new ArrayList<Area>(this.spots);
+		
 		if (!spot.overlaps(checkArea) && spot.insideParent()) {
-			SpotControl.getInstance().createSpot(spot);
+			SpotDAO.getInstance().create(spot);
+			spotTableView.getItems().add(spot);
+			this.spots.add(spot);
+			
 		} else {
-			this.resetSpotTextField();
-			this.setSpotError();
+			this.clearSpotTextField();
 			Notify.getInstance().showAlerte("Valeurs Incorectes","Valeurs Incorectes", "La dimension ou le positionnement de l'emplacement est incorecte !");
 		}
 	}
@@ -341,7 +343,7 @@ public class ShowRoomControl {
 	 * Initialisation du composant zone TableView 
 	 */
 	private void initializeZoneTableView() {
-			this.zoneTableView.getItems().setAll(ZoneControl.getInstance().readAll());
+			this.zoneTableView.getItems().setAll(this.zones);
 			idZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 			nameZoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
@@ -350,7 +352,7 @@ public class ShowRoomControl {
 	 * Initialisation du composant spot TableView 
 	 */
 	private void initializeSpotTableView() {
-		this.spotTableView.getItems().setAll(SpotControl.getInstance().readAll());
+		this.spotTableView.getItems().setAll(this.spots);
 		idSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()+""));
 		nameSpotColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()+""));
 	}
@@ -359,31 +361,35 @@ public class ShowRoomControl {
 	 * Initialisation du composant room ChoiceBox 
 	 */
 	private void initializeRoomChoiceBox() {
-		roomChoiceBox.getItems().setAll(RoomControl.getInstance().readAll());
+		roomChoiceBox.getItems().setAll(this.selectedFloor.getRooms());
 	}
 	
 	/**
 	 * Initialisation du composant zone ChoiceBox 
 	 */
 	private void initializeZoneChoiceBox() {
-		zoneChoiceBox.getItems().setAll(ZoneControl.getInstance().readAll());
+		zoneChoiceBox.getItems().setAll(this.zones);
 	}
 	
 	/**
 	 * Initialisation du composant art ChoiceBox 
 	 */
 	private void initializeArtChoiceBox() {
-		artChoiceBox.getItems().setAll(ArtControl.getInstance().readAll());
+		artChoiceBox.getItems().setAll(ArtDAO.getInstance().readAllAvailable());
+	}
+	
+	private void initializeFloorSelectedChoiceBox() {
+		List<Floor> floors = FloorDAO.getInstance().readAll();
+		if(floors.size() != 0) {
+			this.floorSelectedChoiceBox.getItems().clear();
+			this.floorSelectedChoiceBox.getItems().setAll(floors);
+		}
 	}
 	
 	/**
 	 * Initialisation du composant TreeView
 	 */
 	private void initializeTreeView() {
-		// Récupère les éléments du musée 
-		List<Room> rooms = RoomControl.getInstance().readAll();
-		List<Zone> zones = ZoneControl.getInstance().readAll();
-		List<Spot> spots = SpotControl.getInstance().readAll();
 		// Liste pour retrouver l'adresse mémoire des objets créés
 		ArrayList<TreeItem<String>> roomItems = new ArrayList<TreeItem<String>>();
 		ArrayList<TreeItem<String>> zoneItems = new ArrayList<TreeItem<String>>();
@@ -392,7 +398,7 @@ public class ShowRoomControl {
 		TreeItem<String>  treeItem;
 		
 		// Ajout des Rooms 
-		for(Room room : rooms) {
+		for(Room room : this.selectedFloor.getRooms()) {
 			treeItem = new TreeItem<String>(room.getName());
 			globalItem.getChildren().add(treeItem);
 			roomItems.add(treeItem);
@@ -400,7 +406,7 @@ public class ShowRoomControl {
 		
 		// Ajout des Zones
 		for(TreeItem<String> item : roomItems) {
-			for(Zone zone : zones) {
+			for(Zone zone : this.zones) {
 				if (item.getValue().equals(zone.getRoom().getName())) {
 					treeItem = new TreeItem<String>(zone.getName());
 					item.getChildren().add(treeItem);
@@ -408,42 +414,60 @@ public class ShowRoomControl {
 				}
 			}
 		}
-		
 		// Ajout des spots
-		for(TreeItem<String> item : zoneItems) {
-			for(Spot spot : spots) {
-				if (item.getValue().equals(spot.getZone().getName())) {
+		for(TreeItem<String> zoneItem : zoneItems) {
+			for(Spot spot : this.spots) {
+				if (zoneItem.getValue().equals(spot.getZone().getName())) {
 					treeItem = new TreeItem<String>(spot.getName());
-					item.getChildren().add(treeItem);
+					zoneItem.getChildren().add(treeItem);
 				}
 			}
 		}
 		
 	
 		globalTreeView.setRoot(globalItem);
-	}
+	 }
 	
 	/**
 	 * Initialisation du plan 2D
 	 */
 	private void initializePlan() {
-		this.editPlanControl.drawRoomsOn(RoomControl.getInstance().readAll());
-		this.editPlanControl.drawZonesOn(ZoneControl.getInstance().readAll());
-		this.editPlanControl.drawSpotsOn(SpotControl.getInstance().readAll());
+		this.editPlanControl.CleanPlan();
+		this.editPlanControl.setRatioFitPage(this.selectedFloor);
+		this.editPlanControl.drawFloorOn(this.selectedFloor);
+		this.editPlanControl.drawRoomsOn(this.selectedFloor.getRooms());
+		this.editPlanControl.drawZonesOn(this.zones);
+		this.editPlanControl.drawSpotsOn(this.spots);
 	}
 	
 	/**
-	 * Actualise les éléments visuels de ShowRoom.FXML
+	 * Initialisation de la liste "zones"
 	 */
-	private void refreshWindow() {
-		this.initializeZoneTableView();
-		this.initializeSpotTableView();
-		this.initializeRoomChoiceBox();
-		this.initializeZoneChoiceBox();
-		this.initializeArtChoiceBox();
-		this.initializeTreeView();
-		this.editPlanControl.CleanPlan();
-		this.initializePlan();
+	private void initializeListOfZones() {
+		this.zones.clear();
+		for(Room room : this.selectedFloor.getRooms()) {
+			this.zones.addAll(room.getZones()) ;
 		}
+	}
+	
+	/**
+	 * Initialisation de la liste "spots"
+	 */
+	private void initializeListOfSpots() {
+		this.spots.clear();
+		for(Zone zone : this.zones) {
+			this.spots.addAll(zone.getSpots()) ;
+		}
+	}
+	
+	/**
+	 * Maj du plan 2D et du composant TreeView.
+	 */
+	private void updateFxmlComponent() {
+		this.initializePlan();
+		this.initializeTreeView();
+	}
+	
+
 	
 }

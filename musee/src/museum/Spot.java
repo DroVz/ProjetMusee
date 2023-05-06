@@ -77,6 +77,10 @@ public class Spot extends Area {
 		this.zone = zone;
 	}
 	
+	/**
+	 * Vérifie que le spot est bien dans la zone parent.
+	 * @return True si le spot est bien dans la zone parent.
+	 */
 	public boolean insideParent() {
 		return this.getPos_x() + this.getDim_x() <= this.getZone().getDim_x() 
 				&& this.getPos_y() + this.getDim_y() <= this.getZone().getDim_y();
