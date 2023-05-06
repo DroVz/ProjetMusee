@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.Area;
 import museum.Room;
 import museum.Spot;
 import museum.Zone;

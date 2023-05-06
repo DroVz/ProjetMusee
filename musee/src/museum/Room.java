@@ -1,8 +1,5 @@
  package museum;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Room extends Area {
 	private int id_room;
 	private String name;

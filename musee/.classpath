@@ -6,12 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/alexr/Documents/JavaProg/sqljdbc42.jar">
+	<classpathentry kind="lib" path="C:/Cours/BTS SIO/2ème année/SLAM POO/sqljdbc42.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFxPerso">
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Javafx">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

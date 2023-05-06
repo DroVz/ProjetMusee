@@ -8,6 +8,7 @@ import controller.EditPlanControl;
 import controllerModel.FloorControl;
 import controllerModel.Notify;
 import controllerModel.RoomControl;
+import dao.FloorDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -277,9 +278,6 @@ public class ArchitectControl {
 				selectedRoomLine = roomTableView.getSelectionModel().getSelectedIndex();
 			}
 			
-			
-		
-
 			// private sub and function 
 			private void addFloor() {
 				try {
@@ -432,6 +430,16 @@ public class ArchitectControl {
 			
 				globalTreeView.setRoot(globalItem);
 			}
+			
+			
+			@FXML
+			private void handleSetDraw() {
+				Floor selectedFloor = SelectedFloorChoiceBox.getValue();
+				this.editPlanControl.drawFloorOn(selectedFloor);
+				this.editPlanControl.drawRoomsOn(FloorDAO.getInstance().readRoomsBy(selectedFloor));
+				System.out.println(FloorDAO.getInstance().readRoomsBy(selectedFloor));
+			}
+		
 			
 			private void initializePlan() {
 				this.editPlanControl.drawFloorOn(FloorControl.getInstance().readAll().get(0));

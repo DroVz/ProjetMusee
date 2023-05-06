@@ -120,7 +120,7 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <ChoiceBox fx:id="SelectedFloorChoiceBox" layoutX="368.0" layoutY="46.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+      <ChoiceBox fx:id="SelectedFloorChoiceBox" layoutX="368.0" layoutY="46.0" prefWidth="150.0" onAction="#handleSetDraw" style="-fx-background-color: #3c6e71;" />
       <Label layoutX="228.0" layoutY="50.0" prefHeight="17.0" prefWidth="105.0" text="étage sélectionné :" textFill="#284b63" />
    </children>
 </AnchorPane>

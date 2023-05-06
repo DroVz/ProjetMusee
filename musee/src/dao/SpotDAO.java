@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import museum.Art;
-import museum.ArtStatus;
-import museum.ArtType;
-import museum.Author;
 import museum.Spot;
 import museum.Zone;
 
