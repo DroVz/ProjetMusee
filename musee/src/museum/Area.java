@@ -59,12 +59,6 @@ public abstract class Area {
 		this.dim_y = dim_y;
 	}
 
-
-	public void setPoints(List<Point> points) {
-		this.points = points;
-	}
-
-
 	public void setPoints() {
 		this.points.add(new Point(this.pos_x, this.pos_y));
 		this.points.add(new Point(this.pos_x + this.dim_x, this.pos_y));
@@ -75,30 +69,40 @@ public abstract class Area {
 	public List<Point> getPoints(){
 		return this.points;
 	}
+	
+	/**
+	 * Vérifie si une Area chevauche une des Areas de la liste "areas".
+	 * @param areas
+	 * @return
+	 */
 	public boolean overlaps(List<Area> areas) {
 		boolean pointInside = false;
 		
 		// check other 
 		for(Area area : areas) {
-			if (this.checkOverlaps(area)) {
+			if (this.overlapsOn(area)) {
 				pointInside = true;
 			}
 		}
 		
 		//check Me
 		for(Area area : areas) {
-			if (area.checkOverlaps(this)) {
+			if (area.overlapsOn(this)) {
 				pointInside = true;
 			}
 		}
 		
-		System.out.println("Overlaps : " + pointInside);
 		return pointInside;
 	}
 	
-	private boolean checkOverlaps(Area aera) {
+	/**
+	 * Vérifie si une Area en chevauche une autre.
+	 * @param aera
+	 * @return
+	 */
+	private boolean overlapsOn(Area aera) {
 		boolean pointInside = false;
-	
+		
 		for(Point otherPoint : aera.getPoints()) {
 			if (this.checkPoint(otherPoint)) {
 				pointInside = true;
@@ -107,16 +111,21 @@ public abstract class Area {
 		return pointInside;
 	}
 	
+	/**
+	 * Vérifie si un point est à l'intérieur d'une Area.
+	 * @param point
+	 * @return
+	 */
 	public boolean checkPoint(Point point) {
 		boolean pointInside = false;
 		int x = point.getPointX();
 		int y = point.getPointY();
 		
-		if (x >= this.points.get(0).getPointX() && x <= this.points.get(1).getPointX() && 
-				y >= this.points.get(0).getPointY() && x <= this.points.get(2).getPointY()) {
+		if (x > this.points.get(0).getPointX() && x < this.points.get(1).getPointX() && 
+				y > this.points.get(0).getPointY() && y < this.points.get(2).getPointY()) {
 			pointInside = true;
 		}
+		
 		return pointInside;
 	}
-
 }
