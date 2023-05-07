@@ -3,7 +3,7 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import controllerModel.Notify;
+import museum.Notify;
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
