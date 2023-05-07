@@ -80,6 +80,8 @@ public class CuratorControl {
 	private Button btnAuthorSelect;
 	@FXML
 	private Button btnImageSelect;
+	@FXML 
+	private Button btnOpenShowRoom;
 	@FXML
 	private ComboBox<ArtType> cbbArtType;
 	@FXML
@@ -539,5 +541,10 @@ public class CuratorControl {
         // TODO file peut être vide
         String filename = file.getName();
         lblImgPath.setText(filename);
-	}		
+	}	
+	
+	@FXML
+	private void handleOpenShowRoom() {
+		mainController.showShowRoomPane();
+	}
 }
