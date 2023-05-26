@@ -181,6 +181,7 @@ public class EditPlanControl {
 	 * @param floor 
 	 */
 	public void setRatioFitPage(Floor floor) {
+		this.ratio = 1;
 		while (!floor.insidePane((int)this.drawSection.getPrefWidth(), (int)this.drawSection.getPrefHeight(),this.ratio)) {
 			this.ratio -= 0.05;
 		}

@@ -13,13 +13,13 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllerView.ArchitectControl">
    <children>
-      <TableView fx:id="floorTableView" layoutX="834.0" layoutY="100.0" onMouseClicked="#handleSelectFloorItem" prefHeight="217.0" prefWidth="253.0">
+      <TableView fx:id="floorTableView" layoutX="834.0" layoutY="100.0" prefHeight="217.0" prefWidth="253.0">
         <columns>
           <TableColumn fx:id="idFloorColumn" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="nameFloorColumn" prefWidth="177.0" text="Nom" />
         </columns>
       </TableView>
-      <TableView fx:id="roomTableView" layoutX="1219.0" layoutY="93.0" onMouseClicked="#handleSelectRoomItem" prefHeight="217.0" prefWidth="253.0">
+      <TableView fx:id="roomTableView" layoutX="1219.0" layoutY="93.0" prefHeight="217.0" prefWidth="253.0">
          <columns>
             <TableColumn fx:id="idRoomColumn" prefWidth="75.0" text="ID" />
             <TableColumn fx:id="nameRoomColumn" prefWidth="177.0" text="Nom" />
@@ -33,11 +33,11 @@
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="deleteRoom" layoutX="1382.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
+      <Button fx:id="deleteRoom" disable="true" layoutX="1382.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="createRoom" layoutX="1219.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
+      <Button fx:id="createRoom" disable="true" layoutX="1219.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
@@ -87,7 +87,10 @@
             <Label layoutX="20.0" layoutY="254.0" prefHeight="17.0" prefWidth="65.0" text="Position y :" textFill="#284b63" />
             <Label layoutX="20.0" layoutY="185.0" prefHeight="17.0" prefWidth="65.0" text="Hauteur :" textFill="#284b63" />
             <Label layoutX="25.0" layoutY="25.0" prefHeight="17.0" prefWidth="50.0" text="étage :" textFill="#284b63" />
-            <ChoiceBox fx:id="floorChoiceBox" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+            <Label fx:id="floorLabel" layoutX="107.0" layoutY="21.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding></Label>
          </children>
          <opaqueInsets>
             <Insets />
@@ -110,7 +113,7 @@
          </font>
       </Label>
       <AnchorPane fx:id="drawSection" layoutX="18.0" layoutY="100.0" prefHeight="972.0" prefWidth="778.0" style="-fx-background-color: #FFFFFF;" />
-      <Button fx:id="updateRoom" layoutX="1300.0" layoutY="385.0" mnemonicParsing="false" onAction="#handleUpdateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Modifier" textFill="WHITE">
+      <Button fx:id="updateRoom" disable="true" layoutX="1300.0" layoutY="385.0" mnemonicParsing="false" onAction="#handleUpdateRoom" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Modifier" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -120,7 +123,7 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <ChoiceBox fx:id="SelectedFloorChoiceBox" layoutX="368.0" layoutY="46.0" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
+      <ChoiceBox fx:id="SelectedFloorChoiceBox" layoutX="368.0" layoutY="46.0" onAction="#handleSetInputOfFloor" prefWidth="150.0" style="-fx-background-color: #3c6e71;" />
       <Label layoutX="228.0" layoutY="50.0" prefHeight="17.0" prefWidth="105.0" text="étage sélectionné :" textFill="#284b63" />
    </children>
 </AnchorPane>
