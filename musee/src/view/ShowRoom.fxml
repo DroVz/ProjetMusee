@@ -25,19 +25,19 @@
             <TableColumn fx:id="nameSpotColumn" prefWidth="177.0" text="Nom" />
          </columns>
       </TableView>
-      <Button fx:id="createZone" layoutX="856.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateZone" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
+      <Button fx:id="createZone" disable="true" layoutX="856.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleCreateZone" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="deleteZone" layoutX="977.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteZone" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
+      <Button fx:id="deleteZone" disable="true" layoutX="977.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleDeleteZone" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="deleteSpot" layoutX="1362.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleDeleteSpot" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
+      <Button fx:id="deleteSpot" disable="true" layoutX="1362.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleDeleteSpot" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Supprimer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>
-      <Button fx:id="createSpot" layoutX="1246.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleCreateSpot" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
+      <Button fx:id="createSpot" disable="true" layoutX="1246.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleCreateSpot" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #3c6e71;" text="Créer" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font></Button>

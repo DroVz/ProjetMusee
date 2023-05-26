@@ -1,5 +1,6 @@
  package museum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Floor extends Area {
@@ -34,6 +35,7 @@ public class Floor extends Area {
 		super(0, 0, dim_x, dim_y);
 		this.name = name;
 		this.dim_z = dim_z;
+		this.rooms = new ArrayList<>();
 	}
 
 	public int getId_floor() {
@@ -52,8 +54,8 @@ public class Floor extends Area {
 		return this.dim_z;
 	}
 	
-	public void setDim_z(int Dim_Z) {
-		this.dim_z = Dim_Z ;
+	public void setDim_z(int Dim_z) {
+		this.dim_z = Dim_z ;
 	}
 	
 	
