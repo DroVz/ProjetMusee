@@ -185,6 +185,7 @@ public class ShowRoomControl {
 		this.clearZoneTextField();
 		zoneAnchorPane.setDisable(true);
 		
+		this.initializeZoneChoiceBox();
 		this.updateFxmlComponent();
 	}
 	
