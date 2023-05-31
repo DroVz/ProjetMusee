@@ -10,20 +10,20 @@ L'application "Le Musée des beaux-arts de Rennes" est une application Java qui 
 
 L'application offre les fonctionnalités suivantes :
 
-Affichage de la liste complète des œuvres d'art disponibles dans le musée.
-Consultation des détails d'une œuvre d'art spécifique, tels que son titre, artiste, époque, style et description.
-Création de salle et d'étage.
-Création de zone et positionment avec la création d'emplacement d'oeuvres d'arts.
-Affichage d'un plan 2D des différentes salles par étage.
-Affichage d'un plan 2D des oeuvres et zones crées par étage.
+- Affichage de la liste complète des œuvres d'art disponibles dans le musée.
+- Consultation des détails d'une œuvre d'art spécifique, tels que son titre, artiste, époque, style et description.
+- Création de salle et d'étage.
+- Création de zone et positionment avec la création d'emplacement d'oeuvres d'arts.
+- Affichage d'un plan 2D des différentes salles par étage.
+- Affichage d'un plan 2D des oeuvres et zones crées par étage.
 
 # Comment utiliser l'application
 Pour utiliser et installer l'application "Le Musée des beaux-arts de Rennes", un GUIDE COMPLET est mis à votre disposition ci-dessus. 
 
 # Auteur
 Ce projet a été développé par :
-  DroVz
-  Draeto
-  Cerlia
+  - DroVz
+  - Draeto
+  - Cerlia
 
 N'hésitez pas à nous contacter si vous avez des questions ou des suggestions.
