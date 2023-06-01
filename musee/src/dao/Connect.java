@@ -11,7 +11,7 @@ public class Connect {
 
 	private static Connection connection = null;
 	
-	private static final String ID = "admin";
+	private static final String ID = "museum";
 	private static final String MDP = "admin";
 
 	/**
