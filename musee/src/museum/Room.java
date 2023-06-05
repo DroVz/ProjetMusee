@@ -1,10 +1,7 @@
  package museum;
 
-<<<<<<< HEAD
-=======
 import java.util.List;
 
->>>>>>> dev
 public class Room extends Area {
 	private int id_room;
 	private String name;

@@ -2,11 +2,6 @@ package application;
 	
 import java.io.IOException;
 import java.util.List;
-
-<<<<<<< HEAD
-import museum.Notify;
-=======
->>>>>>> dev
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
