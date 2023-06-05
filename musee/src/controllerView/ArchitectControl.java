@@ -111,7 +111,13 @@ public class ArchitectControl {
 
 
 		// Private property 
+<<<<<<< Updated upstream
 		private Main mainControler;
+=======
+		private Floor selectedFloor;
+		private int selectedFloorLine = 0; 
+		private int selectedRoomLine = 0; 
+>>>>>>> Stashed changes
 		private EditPlanControl editPlanControl;
 		private boolean updateRoomButtonSelected = false;
 		private boolean updateFloorButtonSelected = false;
@@ -325,8 +331,25 @@ public class ArchitectControl {
 			 * Permet la modification d'un étage
 			 */
 			private void updateFloor() {
+<<<<<<< Updated upstream
 				try {
 					Floor selectedFloor = floorTableView.getSelectionModel().getSelectedItem();	
+=======
+				Floor selectedFloor = floorTableView.getItems().get(selectedFloorLine);	
+				System.out.println(!(selectedFloor.getRooms().size() >= 1));
+				if(!(selectedFloor.getRooms().size() >= 1)) {
+					selectedFloor.setName(inputNameFloor.getText());
+				selectedFloor.setDim_x(Integer.parseInt(inputDimXFloor.getText()));
+				selectedFloor.setDim_y(Integer.parseInt(inputDimYFloor.getText()));
+				selectedFloor.setDim_z(Integer.parseInt(inputDimZFloor.getText()));
+				
+				FloorDAO.getInstance().update(selectedFloor);
+				
+				} else {
+					
+					Notify.getInstance().showAlerte("Action impossible","Action impossible", "Vous ne pouvez pas modifier un étage qui comporte au moins une salle !");
+				}
+>>>>>>> Stashed changes
 			
 					if(selectedFloor.getRooms().size() == 0) {
 						selectedFloor.setName(inputNameFloor.getText());
@@ -502,12 +525,16 @@ public class ArchitectControl {
 			 * Initialisation du composant selectedFloor ChoiceBox 
 			 */
 			private void initializeSelectedFloorChoiceBox() {
+<<<<<<< Updated upstream
 				List<Floor> floors = FloorDAO.getInstance().readAll();
 				if(floors.size() != 0) {
 					this.SelectedFloorChoiceBox.getItems().clear();
 					this.SelectedFloorChoiceBox.getItems().setAll(floors);
 					this.roomButtonSetDisable(true);
 				}
+=======
+				this.SelectedFloorChoiceBox.getItems().setAll(FloorDAO.getInstance().readAll());
+>>>>>>> Stashed changes
 			}
 	
 			/**
@@ -544,6 +571,7 @@ public class ArchitectControl {
 				globalTreeView.setRoot(globalItem);
 			}
 			
+<<<<<<< Updated upstream
 			private void initializePlan() {
 				this.editPlanControl.CleanPlan();
 				this.editPlanControl.setRatioFitPage(this.selectedFloor);
@@ -552,5 +580,39 @@ public class ArchitectControl {
 			}
 			
 	
+=======
 			
+			@FXML
+			private void handleSetDraw() {
+				this.selectedFloor = SelectedFloorChoiceBox.getItems().get(selectedFloorLine);
+				this.initializePlan();	
+			}
+		
+			
+			private void initializePlan() {
+				this.editPlanControl.CleanPlan();
+				Floor selectedFloor = SelectedFloorChoiceBox.getValue();
+				this.editPlanControl.setRatioFitPage(selectedFloor);
+				this.editPlanControl.drawFloorOn(selectedFloor);
+				this.editPlanControl.drawRoomsOn(selectedFloor.getRooms());
+				
+				System.out.println(selectedFloor.getRooms());
+			
+			}
+			
+			private void refreshWindow() {
+				this.editPlanControl.CleanPlan();
+				this.initializeFloorTableView();
+				this.initializeRoomTableView();
+				this.initializeFloorChoiceBox();
+				this.initializeTreeView();
+				this.initializeSelectedFloorChoiceBox();
+				this.initializePlan();
+				}
+>>>>>>> Stashed changes
+			
+			private void updateFxmlComponent() {
+				this.initializePlan();
+				this.initializeTreeView();
+			}
 		}
