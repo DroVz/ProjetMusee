@@ -1,8 +1,5 @@
 package controllerView;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
 import application.Main;

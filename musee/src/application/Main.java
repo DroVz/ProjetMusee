@@ -2,11 +2,7 @@ package application;
 	
 import java.io.IOException;
 import java.util.List;
-<<<<<<< Updated upstream
-=======
 
-
->>>>>>> Stashed changes
 import controllerView.ArchitectControl;
 import controllerView.CuratorControl;
 import controllerView.LoginControl;
